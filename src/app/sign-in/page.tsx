@@ -41,7 +41,7 @@ export default function Signin() {
             className="h-16 bg-white text-brand-600 border-none outline-none rounded-md pl-10"
             placeholder="Insira o seu e-mail"
           />
-          <User size={22} className="absolute top-0 text-black left-3 top-14" />
+          <User size={22} className="absolute text-black left-3 top-14" />
         </div>
 
         <div className="flex flex-col gap-2 mt-4 relative">
