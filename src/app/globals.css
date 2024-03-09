@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.footer-background {
+  @apply bg-cover bg-center;
+  background-image: url("/bg-footer.svg");
+  height: 300px;
+}
