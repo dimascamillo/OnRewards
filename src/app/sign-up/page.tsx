@@ -12,7 +12,7 @@ import {
 import logo from "@public/logo.svg";
 import { useState } from "react";
 
-export default function Signin() {
+export default function SignUp() {
   const [passwordType, setPasswordType] = useState("password");
   const [showPasswordIcon, setShowPasswordIcon] = useState(false);
 
