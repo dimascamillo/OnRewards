@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import "../styles/globals.css";
+
 import bannerHome from "@public/background-home.svg";
 
 export default function Home() {
