@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { setCookie } from "nookies";
 
 import {
   User,
@@ -57,6 +58,11 @@ export default function Signin() {
       const response = await api.post("/sessions", {
         email,
         password,
+      });
+
+      setCookie(null, "token", response.data.access_token, {
+        maxAge: 24 * 60 * 60,
+        path: "/",
       });
 
       router.push("/auth/dashboard");
