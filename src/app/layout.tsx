@@ -47,10 +47,10 @@ export default function RootLayout({
 
               <li>
                 <a
-                  className="flex justify-center items-center w-28 h-11 border-yellow-400 border-2 bg-transparent hover:bg-yellow-brand-400 text-white rounded-lg transition-all cursor-pointer"
-                  href="/sign-up"
+                  className="flex justify-center items-center w-36 h-11 border-yellow-400 border-2 bg-transparent hover:bg-yellow-brand-400 text-white rounded-lg transition-all cursor-pointer"
+                  href="/area-do-cliente"
                 >
-                  Registrar
+                  Área do Cliente
                 </a>
               </li>
             </ul>

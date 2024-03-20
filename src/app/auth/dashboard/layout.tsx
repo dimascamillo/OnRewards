@@ -14,7 +14,7 @@ export default function DashboardLayout({
       <body className={` bg-brand-700 text-white h-screen`}>
         <header className="flex justify-between items-center p-5 relative z-10">
           <figure className="w-72 h-16">
-            <a href="/dashboard">
+            <a href="/">
               <Image
                 src={logo}
                 alt=""
