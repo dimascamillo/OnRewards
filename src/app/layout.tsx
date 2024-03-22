@@ -14,7 +14,6 @@ import iconLeft from "@public/icon-left.svg";
 import iconRight from "@public/icon-right.svg";
 import logo from "@public/logo.svg";
 import logoOnBit from "@public/logo.png";
-import MenuHeader from "./components/MenuHeader";
 
 export default function RootLayout({
   children,
@@ -24,19 +23,6 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={`${inter.className} bg-brand-700 text-white h-screen`}>
-        <header className="flex justify-between items-center p-5 relative z-10">
-          <figure className="w-72 h-16">
-            <a href="/">
-              <Image
-                src={logo}
-                alt=""
-                className="w-full h-full object-contain"
-              />
-            </a>
-          </figure>
-
-          <MenuHeader />
-        </header>
         {children}
         <Image
           src={iconLeft}

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Modal from "react-modal";
-import AuthLayout from "../../AuthLayout";
 
 import { Warning } from "@phosphor-icons/react/dist/ssr";
 
@@ -14,9 +13,10 @@ import {
   CreditCard,
 } from "@phosphor-icons/react/dist/ssr";
 
+import logo from "@public/logo.svg";
 import logoMais1Cafe from "@public/mais1cafe.png";
 import MyClientsList from "./MyClientsList";
-
+import MenuHeader from "@/app/components/MenuHeader";
 export default function Dashboard() {
   const [widthMenu, setWidthMenu] = useState("w-20");
   const [iconMenu, setIconMenu] = useState(true);
@@ -44,7 +44,16 @@ export default function Dashboard() {
   }
 
   return (
-    <AuthLayout>
+    <>
+      <header className="flex justify-between items-center p-5 relative z-10">
+        <figure className="w-72 h-16">
+          <a href="/auth/dashboard">
+            <Image src={logo} alt="" className="w-full h-full object-contain" />
+          </a>
+        </figure>
+
+        <MenuHeader />
+      </header>
       <main className="flex items-start flex-wrap">
         <header
           className={`${widthMenu} flex justify-start items-center flex-col gap-7 h-screen bg-brand-600 p-5 transition-all relative z-10`}
@@ -91,7 +100,7 @@ export default function Dashboard() {
           onRequestClose={closeModal}
           contentLabel="Novo Usuário Modal"
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-brand-600 rounded-lg 
-        shadow-lg w-1/3 h-1/3"
+    shadow-lg w-1/3 h-1/3"
           overlayClassName="fixed inset-0 bg-black bg-opacity-50"
         >
           <button onClick={closeModal}>
@@ -114,6 +123,6 @@ export default function Dashboard() {
           </button>
         </Modal>
       </main>
-    </AuthLayout>
+    </>
   );
 }
