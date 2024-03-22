@@ -9,8 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        "brand-400": "#303F50",
         "brand-600": "#24303E",
         "brand-700": "#171E26",
+        "brand-800": "#263240",
 
         "yellow-brand-200": "#F4BC1D",
         "yellow-brand-400": "#F4BC1D",

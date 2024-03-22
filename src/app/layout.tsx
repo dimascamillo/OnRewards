@@ -29,14 +29,14 @@ export default function RootLayout({
           alt=""
           width={184.58}
           height={630.43}
-          className="absolute left-0 top-40"
+          className="absolute left-0 top-40 z-0"
         />
         <Image
           src={iconRight}
           alt=""
           width={449.41}
           height={651.18}
-          className="absolute right-0 top-40"
+          className="absolute right-0 top-40 z-0"
         />
         <footer className="w-3/4 h-80 m-auto footer-background flex justify-center gap-4 p-4 flex-wrap">
           <div className="w-1/4 flex justify-center items-center flex-col gap-5 text-center">

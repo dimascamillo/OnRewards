@@ -1,33 +1,76 @@
-import { PencilSimple, Trash } from "@phosphor-icons/react/dist/ssr";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { api } from "../../../lib/axios";
+import { parseCookies } from "nookies";
+
+import { PencilSimple, UserCirclePlus } from "@phosphor-icons/react/dist/ssr";
+
+type DataSchemaProducts = {
+  id: string;
+  name: string;
+  cycle: number;
+  description: string;
+};
 
 export default function MyClientsList() {
-  return (
-    // <table className={`w-full mt-8 text-left relative z-10`}>
-    //   <thead>
-    //     <th className="p-3 bg-gray-500">Nome do Cliente</th>
-    //     <th className="p-3 bg-gray-500">CPF do Cliente</th>
-    //     <th className="text-center p-3 bg-gray-500">Gerenciar Cliente</th>
-    //     <th className="text-center p-3 bg-gray-500">Remover Cliente</th>
-    //   </thead>
+  const [products, setProducts] = useState([]);
+  const cookies = parseCookies();
+  const authToken = cookies.token;
 
-    //   <tbody>
-    //     <tr>
-    //       <td className="p-3">Dimas Camillo</td>
-    //       <td className="p-3">134.888.111-39</td>
-    //       <td className="text-center p-3">
-    //         <button className="border-2 border-white text-green-500 bg-white hover:bg-transparent hover:border-green-500 hover:text-white p-2 rounded-lg transition-all">
-    //           <PencilSimple className="w-6 h-6" />
-    //         </button>
-    //       </td>
-    //       <td className="text-center p-3">
-    //         <button className="border-2 border-white text-red-500 bg-white hover:bg-transparent hover:border-red-500 hover:text-white p-2 rounded-lg transition-all">
-    //           <Trash className="w-6 h-6" />
-    //         </button>
-    //       </td>
-    //     </tr>
-    //   </tbody>
-    // </table>
-    <h1>Teste</h1>
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await api.get("/getAllProducts", {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  return (
+    <>
+      <h2 className="my-10">Todos os seus Produtos</h2>
+
+      <table className="w-full rounded">
+        <thead>
+          <th className="text-center p-4 bg-brand-400">Nome do Produto</th>
+          <th className="text-center p-4 bg-brand-400">Quantidade de Ciclos</th>
+          <th className="text-center p-4 bg-brand-400">Descricao</th>
+          <th className="text-center p-4 bg-brand-400">Editar Produto</th>
+          <th className="text-center p-4 bg-brand-400">
+            Associar Cliente ao Produto
+          </th>
+        </thead>
+
+        <tbody>
+          {products.map((product: DataSchemaProducts, index: number) => (
+            <tr
+              key={product.id}
+              className="bg-brand-800 transition-all hover:bg-brand-400"
+            >
+              <td className="p-6 text-center">{product.name}</td>
+              <td className="p-6 text-center">{product.cycle}</td>
+              <td className="p-6 text-center">{product.description}</td>
+              <td className="p-6 text-center">
+                <a className="flex justify-center">
+                  <PencilSimple size={24} color="#f0f0f0" />
+                </a>
+              </td>
+              <td className="p-6 text-center">
+                <a className="flex justify-center">
+                  <UserCirclePlus size={24} color="#f0f0f0" />
+                </a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 }

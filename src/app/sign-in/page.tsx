@@ -3,13 +3,14 @@
 import Image from "next/image";
 
 import { z } from "zod";
-
-import logo from "@public/logo.svg";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { setCookie } from "nookies";
+import { api } from "../lib/axios";
+
+import logo from "@public/logo.svg";
 
 import {
   User,
@@ -17,7 +18,6 @@ import {
   EyeSlash,
   Eye,
 } from "@phosphor-icons/react/dist/ssr";
-import { api } from "../lib/axios";
 
 const signinFormSchema = z.object({
   email: z.string().email({ message: "Por favor insira um e-mail válido." }),
