@@ -33,39 +33,47 @@ const productFormSchema = z.object({
   description: z.string(),
 });
 
+const newManagerFormSchema = z.object({
+  name: z.string(),
+  type: z.string(),
+  cpf: z.string(),
+  email: z.string().email(),
+  password: z.string(),
+});
+
 type ProductFormSchema = z.infer<typeof productFormSchema>;
+
+type ManagerFormSchema = z.infer<typeof newManagerFormSchema>;
 export default function Dashboard() {
   const [widthMenu, setWidthMenu] = useState("w-20");
   const [iconMenu, setIconMenu] = useState(true);
   const [visibilityIconsMenu, setVisibilityIconsMenu] = useState("hidden");
   const [modalIsOpenProduct, setModalIsOpenProduct] = useState(false);
+  const [modalIsOpenManager, setModalIsOpenManager] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const router = useRouter();
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
+    register: registerProduct,
+    handleSubmit: handleSubmitProduct,
+    formState: { errors: errorsProduct, isSubmitting: isSubmittingProduct },
+    reset: resetProduct,
   } = useForm<ProductFormSchema>({
     resolver: zodResolver(productFormSchema),
   });
 
-  function openModal() {
-    setModalIsOpen(true);
-  }
-
-  function closeModal() {
-    setModalIsOpen(false);
-  }
-
-  function openModalProduct() {
-    setModalIsOpenProduct(true);
-  }
-
-  function closeModalProduct() {
-    setModalIsOpenProduct(false);
-  }
+  const {
+    register: registerManager,
+    setValue,
+    handleSubmit: handleSubmitManager,
+    formState: { errors: errorsManager, isSubmitting: isSubmittingManager },
+    reset: resetManager,
+  } = useForm<ManagerFormSchema>({
+    resolver: zodResolver(newManagerFormSchema),
+    defaultValues: {
+      type: "2",
+    },
+  });
 
   async function handleCreateProduct(data: ProductFormSchema) {
     const { name, cycle, description } = data;
@@ -97,7 +105,45 @@ export default function Dashboard() {
         progress: undefined,
       });
 
-      reset();
+      resetProduct();
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  }
+
+  async function handleCreateManager(data: ManagerFormSchema) {
+    const { name, cpf, type, email, password } = data;
+    const cookies = parseCookies();
+    const authToken = cookies.token;
+
+    try {
+      const response = await api.post(
+        "/managers",
+        {
+          name,
+          cpf,
+          type,
+          email,
+          password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      toast.success("Gerente criado com sucesso!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+      resetManager();
     } catch (err: any) {
       console.error(err.message);
     }
@@ -118,6 +164,35 @@ export default function Dashboard() {
   function handleLagoutClient() {
     destroyCookie(null, "token", { path: "/" });
     router.push("/auth/sign-in");
+  }
+
+  function openModal() {
+    setModalIsOpen(true);
+  }
+
+  function closeModal() {
+    setModalIsOpen(false);
+  }
+
+  function openModalProduct() {
+    setModalIsOpenProduct(true);
+  }
+
+  function closeModalProduct() {
+    setModalIsOpenProduct(false);
+  }
+
+  function openModalManager() {
+    setModalIsOpenManager(true);
+  }
+
+  function closeModalManager() {
+    setModalIsOpenManager(false);
+  }
+
+  function formatCPF(cpf: string): string {
+    const numericCPF = cpf.replace(/\D/g, "");
+    return numericCPF.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4");
   }
 
   return (
@@ -171,6 +246,14 @@ export default function Dashboard() {
               <CreditCard size={40} />
               <span>Criar Produto</span>
             </button>
+
+            <button
+              onClick={openModalManager}
+              className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
+            >
+              <CreditCard size={40} />
+              <span>Criar Gerente</span>
+            </button>
           </div>
 
           <MyClientsList />
@@ -215,14 +298,14 @@ export default function Dashboard() {
               <X size={15} className="absolute right-7" />
             </button>
             <h2 className="text-2xl mb-4">Cadastre um novo Produto</h2>
-            <form onSubmit={handleSubmit(handleCreateProduct)}>
+            <form onSubmit={handleSubmitProduct(handleCreateProduct)}>
               <div>
                 <label htmlFor="name">Nome do Produto</label>
                 <input
                   type="text"
                   className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
                   placeholder="Digite o nome do Produto"
-                  {...register("name")}
+                  {...registerProduct("name")}
                 />
               </div>
 
@@ -232,7 +315,7 @@ export default function Dashboard() {
                   type="number"
                   className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
                   placeholder="Digite o Clico do Produto"
-                  {...register("cycle", {
+                  {...registerProduct("cycle", {
                     valueAsNumber: true,
                   })}
                 />
@@ -243,7 +326,82 @@ export default function Dashboard() {
                 <textarea
                   className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
                   placeholder="Digite a descrição do Produto"
-                  {...register("description")}
+                  {...registerProduct("description")}
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-green-500 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
+              >
+                Criar
+              </button>
+            </form>
+          </Modal>
+
+          <Modal
+            isOpen={modalIsOpenManager}
+            onRequestClose={closeModalManager}
+            contentLabel="Novo Usuário Modal"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-brand-600 rounded-lg 
+          shadow-lg w-1/3 h-auto z-20"
+            overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20"
+          >
+            <button onClick={closeModalManager}>
+              <X size={15} className="absolute right-7" />
+            </button>
+            <h2 className="text-2xl mb-4">Cadastre um Gerente</h2>
+            <form onSubmit={handleSubmitManager(handleCreateManager)}>
+              <div>
+                <label htmlFor="name">Nome do Gerente</label>
+                <input
+                  type="text"
+                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
+                  placeholder="Digite o nome do Gerente"
+                  {...registerManager("name")}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="cpf">CPF do Gerente</label>
+                <input
+                  type="text"
+                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
+                  placeholder="Digite o CPF do Gerente"
+                  {...registerManager("cpf")}
+                  onChange={(e) => {
+                    const formattedCPF = formatCPF(e.target.value);
+                    setValue("cpf", formattedCPF);
+                  }}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email">E-mail do Gerente</label>
+                <input
+                  type="email"
+                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
+                  placeholder="Digite o E-mail do Gerente"
+                  {...registerManager("email")}
+                />
+              </div>
+
+              <div className="hidden">
+                <label htmlFor="type">Tipo de Conta</label>
+                <input
+                  type="text"
+                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
+                  placeholder="Digite o CPF do Gerente"
+                  {...registerManager("type")}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password">Digite a Senha do Gerente</label>
+                <input
+                  type="password"
+                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
+                  placeholder="Digite a Senha do Gerente"
+                  {...registerManager("password")}
                 />
               </div>
               <button
