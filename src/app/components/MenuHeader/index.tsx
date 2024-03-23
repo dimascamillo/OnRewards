@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import { parseCookies } from "nookies";
 
-export default function MenuHeader() {
+type MenuHeaderProps = {
+  logoutMethod?: () => void;
+};
+
+export default function MenuHeader({ logoutMethod }: MenuHeaderProps) {
   const [hasToken, setHasToken] = useState(false);
 
   useEffect(() => {
@@ -39,7 +43,7 @@ export default function MenuHeader() {
           <li>
             <a
               className="flex justify-center items-center w-28 h-11 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent text-white rounded-lg transition-all cursor-pointer"
-              href="/sign-out"
+              onClick={logoutMethod}
             >
               Sair
             </a>

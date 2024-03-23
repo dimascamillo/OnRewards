@@ -7,7 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "../../lib/axios";
 import Image from "next/image";
 import Modal from "react-modal";
-import { parseCookies } from "nookies";
+import { destroyCookie, parseCookies } from "nookies";
+import { useRouter } from "next/navigation";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -39,6 +40,7 @@ export default function Dashboard() {
   const [visibilityIconsMenu, setVisibilityIconsMenu] = useState("hidden");
   const [modalIsOpenProduct, setModalIsOpenProduct] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -113,6 +115,11 @@ export default function Dashboard() {
     }
   }
 
+  function handleLagoutClient() {
+    destroyCookie(null, "token", { path: "/" });
+    router.push("/auth/sign-in");
+  }
+
   return (
     <>
       <ToastContainer />
@@ -123,7 +130,7 @@ export default function Dashboard() {
           </a>
         </figure>
 
-        <MenuHeader />
+        <MenuHeader logoutMethod={handleLagoutClient} />
       </header>
       <main className="flex items-start flex-wrap">
         <header
