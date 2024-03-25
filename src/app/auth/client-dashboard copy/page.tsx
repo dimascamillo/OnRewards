@@ -24,8 +24,8 @@ import {
 
 import logo from "@public/logo.svg";
 import logoMais1Cafe from "@public/mais1cafe.png";
+import MyClientsList from "./MyClientsList";
 import MenuHeader from "@/app/components/MenuHeader";
-import MyManagersList from "./MyManagersList";
 
 const productFormSchema = z.object({
   name: z.string(),
@@ -256,7 +256,7 @@ export default function Dashboard() {
             </button>
           </div>
 
-          <MyManagersList />
+          <MyClientsList />
 
           <Modal
             isOpen={modalIsOpen}

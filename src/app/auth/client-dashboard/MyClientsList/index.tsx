@@ -31,7 +31,7 @@ export default function MyClientsList() {
     };
 
     fetchProducts();
-  }, []);
+  }, [authToken]);
 
   return (
     <>
