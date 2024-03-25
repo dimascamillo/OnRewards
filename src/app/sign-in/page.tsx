@@ -65,7 +65,9 @@ export default function Signin() {
         path: "/",
       });
 
-      router.push("/auth/dashboard");
+      response.data.type == "gerente"
+        ? router.push("/auth/manager-dashboard")
+        : router.push("/auth/client-dashboard");
     } catch (err: any) {
       if (err.response && err.response.status === 401) {
         setPasswordLengthInvalid("Usuário ou senha incorreto.");
