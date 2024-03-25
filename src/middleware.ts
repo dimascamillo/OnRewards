@@ -7,7 +7,6 @@ export function middleware(request: NextRequest) {
   const token = cookies["token"];
 
   if (!token) {
-    console.log("nao existe token");
     return NextResponse.redirect("http://localhost:3000/sign-in");
   }
 

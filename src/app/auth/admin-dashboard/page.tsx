@@ -200,9 +200,7 @@ export default function Dashboard() {
       <ToastContainer />
       <header className="flex justify-between items-center p-5 relative z-10">
         <figure className="w-72 h-16">
-          <a href="/auth/dashboard">
-            <Image src={logo} alt="" className="w-full h-full object-contain" />
-          </a>
+          <Image src={logo} alt="" className="w-full h-full object-contain" />
         </figure>
 
         <MenuHeader logoutMethod={handleLagoutClient} />

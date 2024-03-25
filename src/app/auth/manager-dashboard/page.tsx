@@ -200,9 +200,7 @@ export default function Dashboard() {
       <ToastContainer />
       <header className="flex justify-between items-center p-5 relative z-10">
         <figure className="w-72 h-16">
-          <a href="/auth/dashboard">
-            <Image src={logo} alt="" className="w-full h-full object-contain" />
-          </a>
+          <Image src={logo} alt="" className="w-full h-full object-contain" />
         </figure>
 
         <MenuHeader logoutMethod={handleLagoutClient} />
@@ -245,14 +243,6 @@ export default function Dashboard() {
             >
               <CreditCard size={40} />
               <span>Criar Produto</span>
-            </button>
-
-            <button
-              onClick={openModalManager}
-              className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
-            >
-              <CreditCard size={40} />
-              <span>Criar Gerente</span>
             </button>
           </div>
 
