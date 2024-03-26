@@ -63,11 +63,30 @@ export default function Signin() {
       setCookie(null, "token", response.data.access_token, {
         maxAge: 24 * 60 * 60,
         path: "/",
+        // httpOnly: true,
+        // secure: process.env.NODE_ENV === 'production',
+        sameSite: "strict",
       });
 
-      response.data.type == "gerente"
-        ? router.push("/auth/manager-dashboard")
-        : router.push("/auth/client-dashboard");
+      setCookie(null, "userType", response.data.type, {
+        maxAge: 24 * 60 * 60,
+        path: "/",
+        // httpOnly: true,
+        // secure: process.env.NODE_ENV === 'production',
+        // sameSite: "strict",
+      });
+
+      switch (response.data.type) {
+        case "2":
+          router.push("/auth/manager-dashboard");
+          break;
+        case "1":
+          router.push("/auth/client-dashboard");
+          break;
+        case "0":
+          router.push("/auth/admin-dashboard");
+          break;
+      }
     } catch (err: any) {
       if (err.response && err.response.status === 401) {
         setPasswordLengthInvalid("Usuário ou senha incorreto.");

@@ -26,6 +26,7 @@ import logo from "@public/logo.svg";
 import logoMais1Cafe from "@public/mais1cafe.png";
 import MyClientsList from "./MyClientsList";
 import MenuHeader from "@/app/components/MenuHeader";
+import { useUserType } from "@/app/hook/userType";
 
 const productFormSchema = z.object({
   name: z.string(),
@@ -35,7 +36,6 @@ const productFormSchema = z.object({
 
 const newManagerFormSchema = z.object({
   name: z.string(),
-  type: z.string(),
   cpf: z.string(),
   email: z.string().email(),
   password: z.string(),
@@ -44,6 +44,7 @@ const newManagerFormSchema = z.object({
 type ProductFormSchema = z.infer<typeof productFormSchema>;
 
 type ManagerFormSchema = z.infer<typeof newManagerFormSchema>;
+
 export default function Dashboard() {
   const [widthMenu, setWidthMenu] = useState("w-20");
   const [iconMenu, setIconMenu] = useState(true);
@@ -52,6 +53,10 @@ export default function Dashboard() {
   const [modalIsOpenManager, setModalIsOpenManager] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const router = useRouter();
+
+  const userType = useUserType();
+
+  console.log(userType);
 
   const {
     register: registerProduct,
@@ -70,9 +75,6 @@ export default function Dashboard() {
     reset: resetManager,
   } = useForm<ManagerFormSchema>({
     resolver: zodResolver(newManagerFormSchema),
-    defaultValues: {
-      type: "2",
-    },
   });
 
   async function handleCreateProduct(data: ProductFormSchema) {
@@ -112,7 +114,7 @@ export default function Dashboard() {
   }
 
   async function handleCreateManager(data: ManagerFormSchema) {
-    const { name, cpf, type, email, password } = data;
+    const { name, cpf, email, password } = data;
     const cookies = parseCookies();
     const authToken = cookies.token;
 
@@ -122,7 +124,6 @@ export default function Dashboard() {
         {
           name,
           cpf,
-          type,
           email,
           password,
         },
@@ -380,16 +381,6 @@ export default function Dashboard() {
                   className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
                   placeholder="Digite o E-mail do Gerente"
                   {...registerManager("email")}
-                />
-              </div>
-
-              <div className="hidden">
-                <label htmlFor="type">Tipo de Conta</label>
-                <input
-                  type="text"
-                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
-                  placeholder="Digite o CPF do Gerente"
-                  {...registerManager("type")}
                 />
               </div>
 

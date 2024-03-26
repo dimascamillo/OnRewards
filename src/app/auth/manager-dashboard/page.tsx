@@ -163,6 +163,7 @@ export default function Dashboard() {
 
   function handleLagoutClient() {
     destroyCookie(null, "token", { path: "/" });
+    destroyCookie(null, "userType", { path: "/" });
     router.push("/auth/sign-in");
   }
 
