@@ -2,15 +2,15 @@
 
 import Image from "next/image";
 
+import logo from "@public/logo.svg";
+import { useState } from "react";
+
 import {
   User,
   LockKeyOpen,
   EyeSlash,
   Eye,
 } from "@phosphor-icons/react/dist/ssr";
-
-import logo from "@public/logo.svg";
-import { useState } from "react";
 
 export default function SignUp() {
   const [passwordType, setPasswordType] = useState("password");

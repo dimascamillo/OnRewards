@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
   const isAuthRoute = request.nextUrl.pathname.startsWith("/auth");
 
   if (!token) {
-    return NextResponse.redirect("http://localhost:3000/sign-in");
+    return NextResponse.redirect(`${process.env.BASE_URL}/sign-in`);
   }
 
   if (isAuthRoute) {
@@ -24,7 +24,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     } else {
       return NextResponse.redirect(
-        `http://localhost:3000${userTypeRoutes[userType]}`
+        `${process.env.BASE_URL}${userTypeRoutes[userType]}`
       );
     }
   }
