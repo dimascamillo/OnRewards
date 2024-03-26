@@ -40,9 +40,16 @@ const newManagerFormSchema = z.object({
   password: z.string(),
 });
 
+const newPlanFormSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+});
+
 type ProductFormSchema = z.infer<typeof productFormSchema>;
 
 type ManagerFormSchema = z.infer<typeof newManagerFormSchema>;
+
+type NewPlanFormSchema = z.infer<typeof newPlanFormSchema>;
 
 export default function Dashboard() {
   const [widthMenu, setWidthMenu] = useState("w-20");
@@ -50,6 +57,7 @@ export default function Dashboard() {
   const [visibilityIconsMenu, setVisibilityIconsMenu] = useState("hidden");
   const [modalIsOpenProduct, setModalIsOpenProduct] = useState(false);
   const [modalIsOpenManager, setModalIsOpenManager] = useState(false);
+  const [modalIsOpenPlan, setModalIsOpenPlan] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const router = useRouter();
 
@@ -70,6 +78,15 @@ export default function Dashboard() {
     reset: resetManager,
   } = useForm<ManagerFormSchema>({
     resolver: zodResolver(newManagerFormSchema),
+  });
+
+  const {
+    register: registerPlan,
+    handleSubmit: handleSubmitPlan,
+    formState: { errors: errorsPlan, isSubmitting: isSubmittingPlan },
+    reset: resetPlan,
+  } = useForm<NewPlanFormSchema>({
+    resolver: zodResolver(newPlanFormSchema),
   });
 
   async function handleCreateProduct(data: ProductFormSchema) {
@@ -145,6 +162,41 @@ export default function Dashboard() {
     }
   }
 
+  async function handleCreatePlan(data: NewPlanFormSchema) {
+    const { name, description } = data;
+    const cookies = parseCookies();
+    const authToken = cookies.token;
+
+    try {
+      const response = await api.post(
+        "/plans",
+        {
+          name,
+          description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      toast.success("Plano criado com sucesso!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+      resetPlan();
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  }
+
   function handleWidthMenu() {
     if (widthMenu === "w-20") {
       setWidthMenu("w-64");
@@ -185,6 +237,14 @@ export default function Dashboard() {
 
   function closeModalManager() {
     setModalIsOpenManager(false);
+  }
+
+  function openModalPlan() {
+    setModalIsOpenPlan(true);
+  }
+
+  function closeModalPlan() {
+    setModalIsOpenPlan(false);
   }
 
   function formatCPF(cpf: string): string {
@@ -248,6 +308,14 @@ export default function Dashboard() {
             >
               <CreditCard size={40} />
               <span>Criar Gerente</span>
+            </button>
+
+            <button
+              onClick={openModalPlan}
+              className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
+            >
+              <CreditCard size={40} />
+              <span>Criar Plano</span>
             </button>
           </div>
 
@@ -389,6 +457,61 @@ export default function Dashboard() {
                   {...registerManager("password")}
                 />
               </div>
+              <button
+                type="submit"
+                className="bg-green-500 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
+              >
+                Criar
+              </button>
+            </form>
+          </Modal>
+
+          <Modal
+            isOpen={modalIsOpenPlan}
+            onRequestClose={closeModalPlan}
+            contentLabel="Novo Plano Modal"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-brand-600 rounded-lg 
+          shadow-lg w-1/3 h-auto z-20"
+            overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20"
+          >
+            <button onClick={closeModalManager}>
+              <X size={15} className="absolute right-7" />
+            </button>
+            <h2 className="text-2xl mb-4">Cadastre um Novo Plano</h2>
+            <form onSubmit={handleSubmitManager(handleCreateManager)}>
+              <div>
+                <label htmlFor="name">Nome do Plano</label>
+                <input
+                  type="text"
+                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
+                  placeholder="Digite o nome do Gerente"
+                  {...registerPlan("name")}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email">E-mail do Gerente</label>
+                <input
+                  type="email"
+                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
+                  placeholder="Digite o E-mail do Gerente"
+                  {...registerManager("email")}
+                  onChange={(e) => {
+                    const formattedCPF = formatCPF(e.target.value);
+                    setValue("cpf", formattedCPF);
+                  }}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="descriptionPlan">Descrição do Plano</label>
+                <textarea
+                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
+                  placeholder="Digite o CPF do Gerente"
+                  {...registerPlan("description")}
+                ></textarea>
+              </div>
+
               <button
                 type="submit"
                 className="bg-green-500 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
