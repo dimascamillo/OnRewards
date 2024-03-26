@@ -26,7 +26,6 @@ import logo from "@public/logo.svg";
 import logoMais1Cafe from "@public/mais1cafe.png";
 import MyClientsList from "./MyClientsList";
 import MenuHeader from "@/app/components/MenuHeader";
-import { useUserType } from "@/app/hook/userType";
 
 const productFormSchema = z.object({
   name: z.string(),
@@ -53,10 +52,6 @@ export default function Dashboard() {
   const [modalIsOpenManager, setModalIsOpenManager] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const router = useRouter();
-
-  const userType = useUserType();
-
-  console.log(userType);
 
   const {
     register: registerProduct,
@@ -164,6 +159,7 @@ export default function Dashboard() {
 
   function handleLagoutClient() {
     destroyCookie(null, "token", { path: "/" });
+    destroyCookie(null, "userType", { path: "/" });
     router.push("/auth/sign-in");
   }
 
@@ -206,7 +202,7 @@ export default function Dashboard() {
 
         <MenuHeader logoutMethod={handleLagoutClient} />
       </header>
-      <main className="flex items-start flex-wrap">
+      <main className="flex items-start">
         <header
           className={`${widthMenu} flex justify-start items-center flex-col gap-7 h-screen bg-brand-600 p-5 transition-all relative z-10`}
         >
@@ -228,7 +224,7 @@ export default function Dashboard() {
           </div>
         </header>
 
-        <section className="w-4/5 p-5 relative z-10">
+        <section className="w-full p-5 relative z-10">
           <div className="flex gap-4">
             <button
               onClick={openModal}
