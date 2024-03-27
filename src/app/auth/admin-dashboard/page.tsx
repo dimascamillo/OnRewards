@@ -36,7 +36,9 @@ const newClientFormSchema = z.object({
 
 const newPlanFormSchema = z.object({
   name: z.string(),
-  description: z.string().optional(),
+  amoutCreateProduct: z.number(),
+  amountCreateManager: z.number(),
+  validityPlan: z.number(),
 });
 
 const newAdminFormSchema = z.object({
@@ -96,16 +98,20 @@ export default function Dashboard() {
   });
 
   async function handleCreatePlan(data: NewPlanFormSchema) {
-    const { name, description } = data;
+    const { name, amountCreateManager, amoutCreateProduct, validityPlan } =
+      data;
+
     const cookies = parseCookies();
     const authToken = cookies.token;
 
     try {
-      const response = await api.post(
+      await api.post(
         "/plans",
         {
           name,
-          description,
+          amountCreateManager,
+          amoutCreateProduct,
+          validityPlan,
         },
         {
           headers: {
@@ -412,6 +418,46 @@ export default function Dashboard() {
                   className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
                   placeholder="Digite o nome do Gerente"
                   {...registerPlan("name")}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="amoutCreateProduct">
+                  Quantos Produtos o Cliente pode Criar
+                </label>
+                <input
+                  type="number"
+                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
+                  placeholder="Digite a quantidade de Produtos"
+                  {...registerPlan("amoutCreateProduct", {
+                    valueAsNumber: true,
+                  })}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="amountCreateManager">
+                  Quantos Gerente o Cliente pode Criar
+                </label>
+                <input
+                  type="number"
+                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
+                  placeholder="Digite a quantidade de Gerentes"
+                  {...registerPlan("amountCreateManager", {
+                    valueAsNumber: true,
+                  })}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="validityPlan">Validade do Plano</label>
+                <input
+                  type="number"
+                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
+                  placeholder="Digite a quantidade de Gerentes"
+                  {...registerPlan("validityPlan", {
+                    valueAsNumber: true,
+                  })}
                 />
               </div>
 
