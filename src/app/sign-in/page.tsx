@@ -65,7 +65,7 @@ export default function Signin() {
       setCookie(null, "token", response.data.access_token, {
         maxAge: 24 * 60 * 60,
         path: "/",
-        // httpOnly: true,
+        httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
       });
