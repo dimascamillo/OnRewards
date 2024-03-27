@@ -10,8 +10,6 @@ import { useRouter } from "next/navigation";
 import { setCookie } from "nookies";
 import { api } from "../lib/axios";
 
-import { decodeToken, JwtPayload } from "../../middleware";
-
 import logo from "@public/logo.svg";
 
 import {
@@ -70,28 +68,7 @@ export default function Signin() {
         sameSite: "strict",
       });
 
-      const decodedTokens = decodeToken(
-        response.data.access_token
-      ) as JwtPayload | null;
-
-      if (decodedTokens) {
-        switch (decodedTokens.type) {
-          case "2":
-            router.push("/auth/manager-dashboard");
-            break;
-          case "1":
-            router.push("/auth/client-dashboard");
-            break;
-          case "0":
-            router.push("/auth/admin-dashboard");
-            break;
-          default:
-            console.error("Invalid token type");
-            break;
-        }
-      } else {
-        console.error("Token is null");
-      }
+      router.push("/auth/");
     } catch (err: any) {
       if (err.response && err.response.status === 401) {
         setPasswordLengthInvalid("Usuário ou senha incorreto.");
