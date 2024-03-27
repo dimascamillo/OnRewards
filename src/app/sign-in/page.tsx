@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { setCookie } from "nookies";
 import { api } from "../lib/axios";
 
+import { decodeToken, JwtPayload } from "../../middleware";
+
 import logo from "@public/logo.svg";
 
 import {
@@ -64,28 +66,31 @@ export default function Signin() {
         maxAge: 24 * 60 * 60,
         path: "/",
         // httpOnly: true,
-        // secure: process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
       });
 
-      setCookie(null, "userType", response.data.type, {
-        maxAge: 24 * 60 * 60,
-        path: "/",
-        // httpOnly: true,
-        // secure: process.env.NODE_ENV === 'production',
-        // sameSite: "strict",
-      });
+      const decodedTokens = decodeToken(
+        response.data.access_token
+      ) as JwtPayload | null;
 
-      switch (response.data.type) {
-        case "2":
-          router.push("/auth/manager-dashboard");
-          break;
-        case "1":
-          router.push("/auth/client-dashboard");
-          break;
-        case "0":
-          router.push("/auth/admin-dashboard");
-          break;
+      if (decodedTokens) {
+        switch (decodedTokens.type) {
+          case "2":
+            router.push("/auth/manager-dashboard");
+            break;
+          case "1":
+            router.push("/auth/client-dashboard");
+            break;
+          case "0":
+            router.push("/auth/admin-dashboard");
+            break;
+          default:
+            console.error("Invalid token type");
+            break;
+        }
+      } else {
+        console.error("Token is null");
       }
     } catch (err: any) {
       if (err.response && err.response.status === 401) {
