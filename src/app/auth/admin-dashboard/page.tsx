@@ -21,6 +21,7 @@ import {
   Money,
   UserCircleGear,
   Warning,
+  PencilSimple,
 } from "@phosphor-icons/react/dist/ssr";
 
 import logo from "@public/logo.svg";
@@ -29,14 +30,19 @@ import MenuHeader from "@/app/components/MenuHeader";
 import CreateNewClientForm from "./components/createNewClientForm";
 import CreateNewAdminForm from "./components/createNewAdminForm";
 import CreateNewPlanForm from "./components/createNewPlanForm";
+import EditClient from "./components/editClient";
 
 export default function Dashboard() {
   const [msgValidationCreateCliente, setMsgValidationCreateCliente] =
     useState("");
 
   const [widthMenu, setWidthMenu] = useState("w-20");
+
   const [iconMenu, setIconMenu] = useState(true);
+
   const [visibilityIconsMenu, setVisibilityIconsMenu] = useState("hidden");
+
+  const [visibilityEditClient, setVisibilityEditClient] = useState("hidden");
 
   const [modalIsOpenPlan, setModalIsOpenPlan] = useState(false);
   const [modalIsOpenClient, setModalIsOpenClient] = useState(false);
@@ -84,6 +90,14 @@ export default function Dashboard() {
 
   function closeModalAdmin() {
     setModalIsOpenAdmin(false);
+  }
+
+  function handleEditClientVisibility() {
+    if (visibilityEditClient === "hidden") {
+      setVisibilityEditClient("");
+    } else {
+      setVisibilityEditClient("hidden");
+    }
   }
 
   return (
@@ -138,11 +152,19 @@ export default function Dashboard() {
             </button>
 
             <button
-              onClick={openModalAdmin}
+              onClick={handleEditClientVisibility}
               className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
             >
               <UserCircleGear size={40} />
               <span>Criar Admin</span>
+            </button>
+
+            <button
+              onClick={handleEditClientVisibility}
+              className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
+            >
+              <PencilSimple size={40} />
+              <span>Editar Cliente</span>
             </button>
           </div>
 
@@ -160,6 +182,8 @@ export default function Dashboard() {
             closeModalPlan={closeModalPlan}
             modalIsOpenPlan={modalIsOpenPlan}
           />
+
+          <EditClient visibility={visibilityEditClient} />
         </section>
       </main>
     </>
