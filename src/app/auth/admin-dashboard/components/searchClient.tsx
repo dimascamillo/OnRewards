@@ -5,6 +5,8 @@ import { parseCookies } from "nookies";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import EditClientModal from "./editClientModal";
+import { EditClientFormSchema } from "./editClientModal";
 
 const consultingClientFormSchema = z.object({
   context: z.string(),
@@ -16,6 +18,10 @@ export default function SearchClient() {
   const formatCNPJ = useFormatCNPJ();
 
   const [clientNotFound, setClientNotFound] = useState("");
+  const [modalIsOpenClient, setModalIsOpenClient] = useState(false);
+  const [infoClient, setInfoClient] = useState<EditClientFormSchema | null>(
+    null
+  );
 
   const {
     register,
@@ -43,7 +49,9 @@ export default function SearchClient() {
         },
       });
 
+      setInfoClient(response.data);
       setClientNotFound("");
+      openModalClient();
 
       reset();
     } catch (err: any) {
@@ -52,6 +60,14 @@ export default function SearchClient() {
       }
       console.error(err.message);
     }
+  }
+
+  function openModalClient() {
+    setModalIsOpenClient(true);
+  }
+
+  function closeModalClient() {
+    setModalIsOpenClient(false);
   }
   return (
     <form onSubmit={handleSubmit(handleCreateClient)}>
@@ -79,6 +95,14 @@ export default function SearchClient() {
         </div>
       </div>
       <span className="text-red-600 font-semibold">{clientNotFound}</span>
+
+      <EditClientModal
+        modalIsOpenClient={modalIsOpenClient}
+        closeModalClient={closeModalClient}
+        getcnpj={infoClient?.cnpj ?? ""}
+        getname={infoClient?.name ?? ""}
+        getemail={infoClient?.email ?? ""}
+      />
     </form>
   );
 }
