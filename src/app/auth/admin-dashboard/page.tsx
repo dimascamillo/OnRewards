@@ -152,7 +152,7 @@ export default function Dashboard() {
             </button>
 
             <button
-              onClick={handleEditClientVisibility}
+              onClick={openModalAdmin}
               className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
             >
               <UserCircleGear size={40} />
