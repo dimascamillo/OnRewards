@@ -18,6 +18,9 @@ const config: Config = {
         "yellow-brand-400": "#F4BC1D",
         "yellow-brand-500": "#C69406",
       },
+      animation: {
+        spin: "spin 1s linear infinite",
+      },
     },
   },
   plugins: [],

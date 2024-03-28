@@ -26,33 +26,9 @@ import {
 import logo from "@public/logo.svg";
 import logoMais1Cafe from "@public/mais1cafe.png";
 import MenuHeader from "@/app/components/MenuHeader";
-
-const newClientFormSchema = z.object({
-  cnpj: z.string(),
-  name: z.string(),
-  email: z.string().email(),
-  password: z.string(),
-});
-
-const newPlanFormSchema = z.object({
-  name: z.string(),
-  amoutCreateProduct: z.number(),
-  amountCreateManager: z.number(),
-  validityPlan: z.number(),
-});
-
-const newAdminFormSchema = z.object({
-  name: z.string(),
-  cpf: z.string(),
-  email: z.string().email(),
-  password: z.string(),
-});
-
-type NewPlanFormSchema = z.infer<typeof newPlanFormSchema>;
-
-type NewClientFormSchema = z.infer<typeof newClientFormSchema>;
-
-type NewAdminFormSchema = z.infer<typeof newAdminFormSchema>;
+import CreateNewClientForm from "./components/createNewClientForm";
+import CreateNewAdminForm from "./components/createNewAdminForm";
+import CreateNewPlanForm from "./components/createNewPlanForm";
 
 export default function Dashboard() {
   const [msgValidationCreateCliente, setMsgValidationCreateCliente] =
@@ -67,149 +43,6 @@ export default function Dashboard() {
   const [modalIsOpenAdmin, setModalIsOpenAdmin] = useState(false);
 
   const router = useRouter();
-
-  const {
-    register: registerClient,
-    handleSubmit: handleSubmitClient,
-    formState: { errors: errorsClient, isSubmitting: isSubmittingClient },
-    reset: resetClient,
-    setValue: setValueClient,
-  } = useForm<NewClientFormSchema>({
-    resolver: zodResolver(newClientFormSchema),
-  });
-
-  const {
-    register: registerPlan,
-    handleSubmit: handleSubmitPlan,
-    formState: { errors: errorsPlan, isSubmitting: isSubmittingPlan },
-    reset: resetPlan,
-  } = useForm<NewPlanFormSchema>({
-    resolver: zodResolver(newPlanFormSchema),
-  });
-
-  const {
-    register: registerAdmin,
-    handleSubmit: handleSubmitAdmin,
-    formState: { errors: errorsAdmin, isSubmitting: isSubmittingAdmin },
-    reset: resetAdmin,
-    setValue: setValueAdmin,
-  } = useForm<NewAdminFormSchema>({
-    resolver: zodResolver(newAdminFormSchema),
-  });
-
-  async function handleCreatePlan(data: NewPlanFormSchema) {
-    const { name, amountCreateManager, amoutCreateProduct, validityPlan } =
-      data;
-
-    const cookies = parseCookies();
-    const authToken = cookies.token;
-
-    try {
-      await api.post(
-        "/plans",
-        {
-          name,
-          amountCreateManager,
-          amoutCreateProduct,
-          validityPlan,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-
-      toast.success("Plano criado com sucesso!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-
-      resetPlan();
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  }
-
-  async function handleCreateClient(data: NewClientFormSchema) {
-    const { cnpj, name, email, password } = data;
-
-    try {
-      await api.post("/clients", {
-        cnpj,
-        name,
-        email,
-        password,
-      });
-
-      toast.success("Client criado com sucesso!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-
-      resetClient();
-    } catch (err: any) {
-      if (err.response && err.response.status === 409) {
-        setMsgValidationCreateCliente("E=mail ou CNPJ já cadastrado.");
-      } else if (err.response && err.response.status === 400) {
-        setMsgValidationCreateCliente("Todos os campos são obrigatórios");
-      } else if (err.response && err.response.status === 400) {
-        setMsgValidationCreateCliente(
-          "A senha deve ter pelo menos 8 caracteres."
-        );
-      } else {
-        console.error(err.message);
-      }
-    }
-  }
-
-  async function handleCreateAdmin(data: NewAdminFormSchema) {
-    const { cpf, name, email, password } = data;
-
-    const cookies = parseCookies();
-    const authToken = cookies.token;
-
-    try {
-      await api.post(
-        "/admins",
-        {
-          name,
-          cpf,
-          email,
-          password,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-
-      toast.success("Admin criado com sucesso!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-
-      resetAdmin();
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  }
 
   function handleWidthMenu() {
     if (widthMenu === "w-20") {
@@ -253,22 +86,10 @@ export default function Dashboard() {
     setModalIsOpenAdmin(false);
   }
 
-  function formatCPF(cpf: string): string {
-    const numericCPF = cpf.replace(/\D/g, "");
-    return numericCPF.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4");
-  }
-
-  function formatCNPJ(cnpj: string): string {
-    const numericCNPJ = cnpj.replace(/\D/g, "");
-    return numericCNPJ.replace(
-      /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
-      "$1.$2.$3/$4-$5"
-    );
-  }
-
   return (
     <>
       <ToastContainer />
+
       <header className="flex justify-between items-center p-5 relative z-10">
         <figure className="w-72 h-16">
           <Image src={logo} alt="" className="w-full h-full object-contain" />
@@ -325,217 +146,20 @@ export default function Dashboard() {
             </button>
           </div>
 
-          <Modal
-            isOpen={modalIsOpenClient}
-            onRequestClose={closeModalClient}
-            contentLabel="Novo Cliente Modal"
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-brand-600 rounded-lg 
-    shadow-lg w-1/3 h-auto z-20"
-            overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20"
-          >
-            <button onClick={closeModalClient}>
-              <X size={15} className="absolute right-7" />
-            </button>
-            <h2 className="text-2xl mb-4">Cadastrar Novo Cliente</h2>
-            <form onSubmit={handleSubmitClient(handleCreateClient)}>
-              <div>
-                <label htmlFor="cnpjClient">CNPJ do Cliente</label>
-                <input
-                  type="text"
-                  className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-                  placeholder="Digite o CNPJ do Cliente"
-                  {...registerClient("cnpj")}
-                  onChange={(e) => {
-                    const formattedCNPJ = formatCNPJ(e.target.value);
-                    setValueClient("cnpj", formattedCNPJ);
-                  }}
-                  maxLength={18}
-                />
-              </div>
+          <CreateNewClientForm
+            modalIsOpenClient={modalIsOpenClient}
+            closeModalClient={closeModalClient}
+          />
 
-              <div>
-                <label htmlFor="nameClient">Nome do Cliente</label>
-                <input
-                  type="text"
-                  className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-                  placeholder="Digite o Nome do Cliente"
-                  {...registerClient("name")}
-                />
-              </div>
+          <CreateNewAdminForm
+            closeModalAdmin={closeModalAdmin}
+            modalIsOpenAdmin={modalIsOpenAdmin}
+          />
 
-              <div>
-                <label htmlFor="emailClient">E-mail do Cliente</label>
-                <input
-                  type="email"
-                  className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-                  placeholder="Digite o E-mail do Cliente"
-                  {...registerClient("email")}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="passwordClient">Password do Cliente</label>
-                <input
-                  type="password"
-                  className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-                  placeholder="Digite a Senha do Cliente"
-                  {...registerClient("password")}
-                />
-              </div>
-
-              <div className="my-4">
-                <span className="text-red-400 font-semibold w-full">
-                  {msgValidationCreateCliente}
-                </span>
-              </div>
-
-              <button
-                type="submit"
-                className="bg-green-500 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
-              >
-                Criar
-              </button>
-            </form>
-          </Modal>
-
-          <Modal
-            isOpen={modalIsOpenPlan}
-            onRequestClose={closeModalPlan}
-            contentLabel="Novo Plano Modal"
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-brand-600 rounded-lg 
-          shadow-lg w-1/3 h-auto z-20"
-            overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20"
-          >
-            <button onClick={closeModalPlan}>
-              <X size={15} className="absolute right-7" />
-            </button>
-            <h2 className="text-2xl mb-4">Cadastre um Novo Plano</h2>
-            <form onSubmit={handleSubmitPlan(handleCreatePlan)}>
-              <div>
-                <label htmlFor="name">Nome do Plano</label>
-                <input
-                  type="text"
-                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
-                  placeholder="Digite o nome do Gerente"
-                  {...registerPlan("name")}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="amoutCreateProduct">
-                  Quantos Produtos o Cliente pode Criar
-                </label>
-                <input
-                  type="number"
-                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
-                  placeholder="Digite a quantidade de Produtos"
-                  {...registerPlan("amoutCreateProduct", {
-                    valueAsNumber: true,
-                  })}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="amountCreateManager">
-                  Quantos Gerente o Cliente pode Criar
-                </label>
-                <input
-                  type="number"
-                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
-                  placeholder="Digite a quantidade de Gerentes"
-                  {...registerPlan("amountCreateManager", {
-                    valueAsNumber: true,
-                  })}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="validityPlan">Validade do Plano</label>
-                <input
-                  type="number"
-                  className="mb-6 p-2 border border-gray-300 text-black rounded-lg w-full"
-                  placeholder="Digite a quantidade de Gerentes"
-                  {...registerPlan("validityPlan", {
-                    valueAsNumber: true,
-                  })}
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="bg-green-500 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
-              >
-                Criar
-              </button>
-            </form>
-          </Modal>
-
-          <Modal
-            isOpen={modalIsOpenAdmin}
-            onRequestClose={closeModalAdmin}
-            contentLabel="Novo Admin Modal"
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-brand-600 rounded-lg 
-    shadow-lg w-1/3 h-auto z-20"
-            overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20"
-          >
-            <button onClick={closeModalAdmin}>
-              <X size={15} className="absolute right-7" />
-            </button>
-            <h2 className="text-2xl mb-4">Cadastrar Novo Admin</h2>
-            <form onSubmit={handleSubmitAdmin(handleCreateAdmin)}>
-              <div>
-                <label htmlFor="cpfClient">CPF do Admin</label>
-                <input
-                  type="text"
-                  className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-                  placeholder="Digite o CPF do Admin"
-                  {...registerAdmin("cpf")}
-                  onChange={(e) => {
-                    const formattedCPF = formatCPF(e.target.value);
-                    setValueAdmin("cpf", formattedCPF);
-                  }}
-                  maxLength={14}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="nameClient">Nome do Admin</label>
-                <input
-                  type="text"
-                  className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-                  placeholder="Digite o Nome do Admin"
-                  {...registerAdmin("name")}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="emailClient">E-mail do Admin</label>
-                <input
-                  type="email"
-                  className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-                  placeholder="Digite o E-mail do Admin"
-                  {...registerAdmin("email")}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="passwordClient">Password do Admin</label>
-                <input
-                  type="password"
-                  className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-                  placeholder="Digite a Senha do Admin"
-                  {...registerAdmin("password")}
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="bg-green-500 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
-              >
-                Criar
-              </button>
-            </form>
-          </Modal>
+          <CreateNewPlanForm
+            closeModalPlan={closeModalPlan}
+            modalIsOpenPlan={modalIsOpenPlan}
+          />
         </section>
       </main>
     </>
