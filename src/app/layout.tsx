@@ -14,6 +14,7 @@ import iconLeft from "@public/icon-left.svg";
 import iconRight from "@public/icon-right.svg";
 import logo from "@public/logo.svg";
 import logoOnBit from "@public/logo.png";
+import { ClientIdProvider } from "./contexts/ClientContext";
 
 export default function RootLayout({
   children,
@@ -23,7 +24,8 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={`${inter.className} bg-brand-700 text-white h-screen`}>
-        {children}
+        <>{children}</>
+
         <Image
           src={iconLeft}
           alt=""

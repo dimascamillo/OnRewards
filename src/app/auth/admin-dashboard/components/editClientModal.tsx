@@ -9,13 +9,15 @@ import Modal from "react-modal";
 import { X } from "@phosphor-icons/react/dist/ssr";
 import useFormatCNPJ from "@/app/hook/useFormatCnpj";
 import { parseCookies } from "nookies";
+import { decodeToken } from "@/middleware";
+import { useClientId } from "@/app/contexts/ClientContext";
 
 const editClientFormSchema = z.object({
   cnpj: z.string(),
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
-  plan: z.string(),
+  planId: z.string(),
 });
 
 const infoPlanSchema = z.object({
@@ -48,30 +50,32 @@ export default function EditClientModal({
   const cookies = parseCookies();
   const authToken = cookies.token;
 
+  const { clientId } = useClientId();
+
   const {
-    register,
-    handleSubmit,
+    register: registerUpdateClient,
+    handleSubmit: handleSubmitUpdateClient,
     formState: { errors, isSubmitting },
-    reset,
-    setValue,
+    reset: resetUpdateClient,
+    setValue: setValueUpdateClient,
   } = useForm<EditClientFormSchema>({
     resolver: zodResolver(editClientFormSchema),
   });
 
   async function handleUpdateClient(data: EditClientFormSchema) {
-    const { name, email, password, plan } = data;
+    const { name, email, password, planId } = data;
 
     const cookies = parseCookies();
     const authToken = cookies.token;
 
     try {
-      await api.patch(
-        "/att/client",
+      await api.put(
+        `/updateClient/${clientId}`,
         {
           name,
           email,
           password,
-          plan, // Certifique-se de incluir o plano na requisição, se necessário
+          planId: clientId,
         },
         {
           headers: {
@@ -90,7 +94,7 @@ export default function EditClientModal({
         progress: undefined,
       });
 
-      reset();
+      resetUpdateClient();
     } catch (err: any) {
       console.error(err.message);
     }
@@ -113,9 +117,9 @@ export default function EditClientModal({
     fetchPlans();
   }, [authToken]);
 
-  setValue("cnpj", getcnpj);
-  setValue("name", getname);
-  setValue("email", getemail);
+  setValueUpdateClient("cnpj", getcnpj);
+  setValueUpdateClient("name", getname);
+  setValueUpdateClient("email", getemail);
 
   return (
     <Modal
@@ -130,7 +134,7 @@ shadow-lg w-1/3 h-auto z-20"
         <X size={15} className="absolute right-7" />
       </button>
       <h2 className="text-2xl mb-4">Editiar Cliente</h2>
-      <form onSubmit={handleSubmit(handleUpdateClient)}>
+      <form onSubmit={handleSubmitUpdateClient(handleUpdateClient)}>
         <div>
           <label htmlFor="cnpjClient">CNPJ do Cliente</label>
           <input
@@ -139,7 +143,7 @@ shadow-lg w-1/3 h-auto z-20"
             placeholder="Digite o CNPJ do Cliente"
             maxLength={18}
             disabled
-            {...register("cnpj")}
+            {...registerUpdateClient("cnpj")}
           />
         </div>
 
@@ -149,7 +153,7 @@ shadow-lg w-1/3 h-auto z-20"
             type="text"
             className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
             placeholder="Digite o Nome do Cliente"
-            {...register("name")}
+            {...registerUpdateClient("name")}
           />
         </div>
 
@@ -159,7 +163,7 @@ shadow-lg w-1/3 h-auto z-20"
             type="email"
             className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
             placeholder="Digite o E-mail do Cliente"
-            {...register("email")}
+            {...registerUpdateClient("email")}
           />
         </div>
 
@@ -169,7 +173,7 @@ shadow-lg w-1/3 h-auto z-20"
             type="password"
             className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
             placeholder="Digite a Senha do Cliente"
-            {...register("password")}
+            {...registerUpdateClient("password")}
           />
         </div>
 
@@ -177,12 +181,12 @@ shadow-lg w-1/3 h-auto z-20"
           <label htmlFor="plans">Selecione o Plano</label>
           <select
             className="w-full my-4 p-2 text-black font-bold"
-            {...register("plan")}
+            {...registerUpdateClient("planId")}
           >
             <option value="">Selecione um Plano</option>
             {plans.map((plan: InfoPlanSchema) => {
               return (
-                <option className="p-3" key={plan.id} value={plan.name}>
+                <option className="p-3" key={plan.id} value={plan.id}>
                   {plan.name}
                 </option>
               );
