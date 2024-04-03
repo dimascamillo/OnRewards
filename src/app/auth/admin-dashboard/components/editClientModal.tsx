@@ -101,14 +101,29 @@ export default function EditClientModal({
       }
     }
 
-    try {
-      await api.delete(`/client/${clientId}`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-    } catch (err: any) {
-      console.error(err.message);
+    if (choseMethodClient) {
+      try {
+        await api.delete(`/client/${clientId}`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        toast.success("Cliente excluído com sucesso!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+
+        resetUpdateClient();
+        closeModalClient();
+      } catch (err: any) {
+        console.error(err.message);
+      }
     }
   }
 
