@@ -7,7 +7,7 @@ import { z } from "zod";
 import Modal from "react-modal";
 
 import { X } from "@phosphor-icons/react/dist/ssr";
-import useFormatCNPJ from "@/app/hook/useFormatCnpj";
+import useFormatCNPJ from "@/app/hooks/useFormatCnpj";
 import { parseCookies } from "nookies";
 import { decodeToken } from "@/middleware";
 import { useClientId } from "@/app/contexts/ClientContext";
@@ -17,7 +17,6 @@ const editClientFormSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
-  planId: z.string(),
 });
 
 const infoPlanSchema = z.object({
@@ -44,7 +43,6 @@ export default function EditClientModal({
   getname,
   getemail,
 }: EditClientProps) {
-  const formatCNPJ = useFormatCNPJ();
   const [plans, setPlans] = useState([]);
 
   const cookies = parseCookies();
@@ -63,19 +61,18 @@ export default function EditClientModal({
   });
 
   async function handleUpdateClient(data: EditClientFormSchema) {
-    const { name, email, password, planId } = data;
+    const { name, email, password } = data;
 
     const cookies = parseCookies();
     const authToken = cookies.token;
 
     try {
-      await api.put(
+      await api.patch(
         `/updateClient/${clientId}`,
         {
           name,
           email,
           password,
-          planId: clientId,
         },
         {
           headers: {
@@ -95,6 +92,7 @@ export default function EditClientModal({
       });
 
       resetUpdateClient();
+      closeModalClient();
     } catch (err: any) {
       console.error(err.message);
     }
@@ -177,7 +175,7 @@ shadow-lg w-1/3 h-auto z-20"
           />
         </div>
 
-        <div>
+        {/* <div>
           <label htmlFor="plans">Selecione o Plano</label>
           <select
             className="w-full my-4 p-2 text-black font-bold"
@@ -192,7 +190,7 @@ shadow-lg w-1/3 h-auto z-20"
               );
             })}
           </select>
-        </div>
+        </div> */}
 
         <button
           type="submit"

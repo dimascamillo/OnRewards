@@ -132,6 +132,7 @@ export default function Signin() {
         <button
           type="submit"
           className="h-16 bg-yellow-brand-400 text-center text-white hover:bg-yellow-brand-500 transition-all mt-2 p-1 rounded-md uppercase"
+          disabled={isSubmitting}
         >
           Entrar
         </button>

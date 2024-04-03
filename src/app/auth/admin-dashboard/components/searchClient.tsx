@@ -1,4 +1,4 @@
-import useFormatCNPJ from "@/app/hook/useFormatCnpj";
+import useFormatCNPJ from "@/app/hooks/useFormatCnpj";
 import { api } from "@/app/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { parseCookies } from "nookies";
