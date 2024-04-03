@@ -13,6 +13,7 @@ import { decodeToken } from "@/middleware";
 import { useClientId } from "@/app/contexts/ClientContext";
 
 const editClientFormSchema = z.object({
+  id: z.string().optional(),
   cnpj: z.string(),
   name: z.string().optional(),
   email: z.string().email().optional(),
@@ -43,7 +44,7 @@ export default function EditClientModal({
   getname,
   getemail,
 }: EditClientProps) {
-  // const [choseMethodClient, setChoseMethodClient] = useState(false);
+  const [choseMethodClient, setChoseMethodClient] = useState(false);
 
   const cookies = parseCookies();
   const authToken = cookies.token;
@@ -61,39 +62,51 @@ export default function EditClientModal({
   });
 
   async function handleUpdateClient(data: EditClientFormSchema) {
-    const { cnpj, name, email, password } = data;
+    const { id, cnpj, name, email, password } = data;
 
     const cookies = parseCookies();
     const authToken = cookies.token;
 
-    try {
-      await api.patch(
-        `/updateClient/${clientId}`,
-        {
-          cnpj,
-          name,
-          email,
-          password,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
+    if (!choseMethodClient) {
+      try {
+        await api.patch(
+          `/updateClient/${clientId}`,
+          {
+            cnpj,
+            name,
+            email,
+            password,
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
 
-      toast.success("Client editado com sucesso!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+        toast.success("Client editado com sucesso!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+
+        resetUpdateClient();
+        closeModalClient();
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    }
+
+    try {
+      await api.delete(`/client/${clientId}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
       });
-
-      resetUpdateClient();
-      closeModalClient();
     } catch (err: any) {
       console.error(err.message);
     }
@@ -103,13 +116,13 @@ export default function EditClientModal({
   setValueUpdateClient("name", getname);
   setValueUpdateClient("email", getemail);
 
-  // function changevalueMethodToFalse() {
-  //   setChoseMethodClient(false);
-  // }
+  function changevalueMethodToFalse() {
+    setChoseMethodClient(false);
+  }
 
-  // function changevalueMethodToTrue() {
-  //   setChoseMethodClient(true);
-  // }
+  function changevalueMethodToTrue() {
+    setChoseMethodClient(true);
+  }
 
   return (
     <Modal
@@ -170,9 +183,18 @@ shadow-lg w-1/3 h-auto z-20"
         <footer className="flex justify-start items-center gap-3">
           <button
             type="submit"
+            onClick={changevalueMethodToFalse}
             className="bg-green-500 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
           >
             Editar
+          </button>
+
+          <button
+            type="submit"
+            onClick={changevalueMethodToTrue}
+            className="bg-red-500 hover:bg-red-600 text-white transition-all w-28 h-12 rounded-lg"
+          >
+            Excluir
           </button>
         </footer>
       </form>
