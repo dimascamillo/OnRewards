@@ -12,7 +12,7 @@ const ClientIdContext = createContext<ClientIdContextData>({
 });
 
 interface ClientIdProviderProps {
-  children: ReactNode; // Adicione esta linha para tipar a propriedade children
+  children: ReactNode;
 }
 
 export const ClientIdProvider: React.FC<ClientIdProviderProps> = ({
