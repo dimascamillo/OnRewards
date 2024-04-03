@@ -7,7 +7,7 @@ import { z } from "zod";
 import Modal from "react-modal";
 
 import { X } from "@phosphor-icons/react/dist/ssr";
-import useFormatCNPJ from "@/app/hook/useFormatCnpj";
+import useFormatCNPJ from "@/app/hooks/useFormatCnpj";
 
 const newClientFormSchema = z.object({
   cnpj: z.string(),

@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Modal from "react-modal";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import useFormatCPF from "@/app/hook/useFormatCpf";
+import useFormatCPF from "@/app/hooks/useFormatCpf";
 
 import { X } from "@phosphor-icons/react/dist/ssr";
 import { parseCookies } from "nookies";

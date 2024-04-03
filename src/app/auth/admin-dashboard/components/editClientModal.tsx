@@ -14,9 +14,9 @@ import { useClientId } from "@/app/contexts/ClientContext";
 
 const editClientFormSchema = z.object({
   cnpj: z.string(),
-  name: z.string(),
-  email: z.string().email(),
-  password: z.string(),
+  name: z.string().optional(),
+  email: z.string().email().optional(),
+  password: z.string().optional(),
 });
 
 const infoPlanSchema = z.object({
@@ -43,7 +43,7 @@ export default function EditClientModal({
   getname,
   getemail,
 }: EditClientProps) {
-  const [plans, setPlans] = useState([]);
+  // const [choseMethodClient, setChoseMethodClient] = useState(false);
 
   const cookies = parseCookies();
   const authToken = cookies.token;
@@ -61,7 +61,7 @@ export default function EditClientModal({
   });
 
   async function handleUpdateClient(data: EditClientFormSchema) {
-    const { name, email, password } = data;
+    const { cnpj, name, email, password } = data;
 
     const cookies = parseCookies();
     const authToken = cookies.token;
@@ -70,6 +70,7 @@ export default function EditClientModal({
       await api.patch(
         `/updateClient/${clientId}`,
         {
+          cnpj,
           name,
           email,
           password,
@@ -98,26 +99,17 @@ export default function EditClientModal({
     }
   }
 
-  useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const response = await api.get("/getAllPlans", {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-        setPlans(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar Planos:", error);
-      }
-    };
-
-    fetchPlans();
-  }, [authToken]);
-
   setValueUpdateClient("cnpj", getcnpj);
   setValueUpdateClient("name", getname);
   setValueUpdateClient("email", getemail);
+
+  // function changevalueMethodToFalse() {
+  //   setChoseMethodClient(false);
+  // }
+
+  // function changevalueMethodToTrue() {
+  //   setChoseMethodClient(true);
+  // }
 
   return (
     <Modal
@@ -175,29 +167,14 @@ shadow-lg w-1/3 h-auto z-20"
           />
         </div>
 
-        {/* <div>
-          <label htmlFor="plans">Selecione o Plano</label>
-          <select
-            className="w-full my-4 p-2 text-black font-bold"
-            {...registerUpdateClient("planId")}
+        <footer className="flex justify-start items-center gap-3">
+          <button
+            type="submit"
+            className="bg-green-500 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
           >
-            <option value="">Selecione um Plano</option>
-            {plans.map((plan: InfoPlanSchema) => {
-              return (
-                <option className="p-3" key={plan.id} value={plan.id}>
-                  {plan.name}
-                </option>
-              );
-            })}
-          </select>
-        </div> */}
-
-        <button
-          type="submit"
-          className="bg-green-500 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
-        >
-          Criar
-        </button>
+            Editar
+          </button>
+        </footer>
       </form>
     </Modal>
   );
