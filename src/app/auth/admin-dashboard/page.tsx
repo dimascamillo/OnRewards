@@ -33,7 +33,8 @@ import CreateNewPlanForm from "./components/createNewPlanForm";
 import EditClient from "./components/editClient";
 import { ClientIdProvider } from "@/app/contexts/ClientContext";
 import { NextPage } from "next";
-import { AdminProvider } from "@/app/contexts/AdminContext";
+import { AdminProvider, useAdmin } from "@/app/contexts/AdminContext";
+import { decodeToken } from "@/middleware";
 
 export default function Dashboard() {
   const [msgValidationCreateCliente, setMsgValidationCreateCliente] =
@@ -52,6 +53,34 @@ export default function Dashboard() {
   const [modalIsOpenAdmin, setModalIsOpenAdmin] = useState(false);
 
   const router = useRouter();
+
+  const { id, name, setId, setName, setCpf, setEmail } = useAdmin();
+
+  const cookies = parseCookies();
+  const authToken = cookies.token;
+
+  const token = decodeToken(authToken);
+
+  async function getInfoAdmin() {
+    if (token) {
+      const { sub } = token;
+
+      try {
+        const response = await api.get(`/admin/${sub}`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        setId(response.data.id);
+        setName(response.data.name);
+        setCpf(response.data.cpf);
+        setEmail(response.data.email);
+      } catch (err: any) {
+        console.error(err);
+      }
+    }
+  }
 
   function handleWidthMenu() {
     if (widthMenu === "w-20") {
@@ -103,99 +132,95 @@ export default function Dashboard() {
     }
   }
 
-  return (
-    <AdminProvider>
-      <ClientIdProvider>
-        <>
-          <ToastContainer />
-          <header className="flex justify-between items-center p-5 relative z-10">
-            <figure className="w-72 h-16">
-              <Image
-                src={logo}
-                alt=""
-                className="w-full h-full object-contain"
-              />
-            </figure>
+  getInfoAdmin();
 
-            <MenuHeader logoutMethod={handleLagoutClient} />
-          </header>
-          <main className="flex items-start">
-            <header
-              className={`${widthMenu} flex justify-start items-center flex-col gap-7 h-screen bg-brand-600 p-5 transition-all relative z-10`}
+  return (
+    <ClientIdProvider>
+      <>
+        <ToastContainer />
+        <header className="flex justify-between items-center p-5 relative z-10">
+          <figure className="w-72 h-16">
+            <Image src={logo} alt="" className="w-full h-full object-contain" />
+          </figure>
+
+          <MenuHeader logoutMethod={handleLagoutClient} />
+        </header>
+        <main className="flex items-start">
+          <header
+            className={`${widthMenu} flex justify-start items-center flex-col gap-7 h-screen bg-brand-600 p-5 transition-all relative z-10`}
+          >
+            <button onClick={handleWidthMenu}>
+              {iconMenu ? <List size={22} /> : <X size={22} />}
+            </button>
+
+            <div
+              className={`flex justify-center flex-col items-center gap-5 ${visibilityIconsMenu}`}
             >
-              <button onClick={handleWidthMenu}>
-                {iconMenu ? <List size={22} /> : <X size={22} />}
+              <figure className="w-32 h-32">
+                <Image
+                  src={logoMais1Cafe}
+                  alt=""
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </figure>
+              <span>{name}</span>
+            </div>
+          </header>
+
+          <section className="w-full p-5 relative z-10">
+            <div className="flex gap-4">
+              <button
+                onClick={openModalClient}
+                className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
+              >
+                <UserCirclePlus size={40} />
+                <span>Criar Cliente</span>
               </button>
 
-              <div
-                className={`flex justify-center flex-col items-center gap-5 ${visibilityIconsMenu}`}
+              <button
+                onClick={openModalPlan}
+                className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
               >
-                <figure className="w-32 h-32">
-                  <Image
-                    src={logoMais1Cafe}
-                    alt=""
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                </figure>
-                <span>Mais Café</span>
-              </div>
-            </header>
+                <Money size={40} />
+                <span>Criar Plano</span>
+              </button>
 
-            <section className="w-full p-5 relative z-10">
-              <div className="flex gap-4">
-                <button
-                  onClick={openModalClient}
-                  className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
-                >
-                  <UserCirclePlus size={40} />
-                  <span>Criar Cliente</span>
-                </button>
+              <button
+                onClick={openModalAdmin}
+                className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
+              >
+                <UserCircleGear size={40} />
+                <span>Criar Admin</span>
+              </button>
 
-                <button
-                  onClick={openModalPlan}
-                  className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
-                >
-                  <Money size={40} />
-                  <span>Criar Plano</span>
-                </button>
+              <button
+                onClick={handleEditClientVisibility}
+                className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
+              >
+                <PencilSimple size={40} />
+                <span>Editar Cliente</span>
+              </button>
+            </div>
 
-                <button
-                  onClick={openModalAdmin}
-                  className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
-                >
-                  <UserCircleGear size={40} />
-                  <span>Criar Admin</span>
-                </button>
+            <CreateNewClientForm
+              modalIsOpenClient={modalIsOpenClient}
+              closeModalClient={closeModalClient}
+            />
 
-                <button
-                  onClick={handleEditClientVisibility}
-                  className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
-                >
-                  <PencilSimple size={40} />
-                  <span>Editar Cliente</span>
-                </button>
-              </div>
+            <CreateNewAdminForm
+              closeModalAdmin={closeModalAdmin}
+              modalIsOpenAdmin={modalIsOpenAdmin}
+            />
 
-              <CreateNewClientForm
-                modalIsOpenClient={modalIsOpenClient}
-                closeModalClient={closeModalClient}
-              />
+            <CreateNewPlanForm
+              closeModalPlan={closeModalPlan}
+              modalIsOpenPlan={modalIsOpenPlan}
+            />
 
-              <CreateNewAdminForm
-                closeModalAdmin={closeModalAdmin}
-                modalIsOpenAdmin={modalIsOpenAdmin}
-              />
-
-              <CreateNewPlanForm
-                closeModalPlan={closeModalPlan}
-                modalIsOpenPlan={modalIsOpenPlan}
-              />
-
-              <EditClient visibility={visibilityEditClient} />
-            </section>
-          </main>
-        </>
-      </ClientIdProvider>
-    </AdminProvider>
+            <EditClient visibility={visibilityEditClient} />
+          </section>
+        </main>
+      </>
+    </ClientIdProvider>
   );
 }

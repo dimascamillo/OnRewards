@@ -9,7 +9,6 @@ import Modal from "react-modal";
 import { X } from "@phosphor-icons/react/dist/ssr";
 import useFormatCNPJ from "@/app/hooks/useFormatCnpj";
 import { parseCookies } from "nookies";
-import { decodeToken } from "@/middleware";
 import { useClientId } from "@/app/contexts/ClientContext";
 
 const editClientFormSchema = z.object({

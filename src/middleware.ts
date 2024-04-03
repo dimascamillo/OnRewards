@@ -12,6 +12,7 @@ const userTypeRoutes: { [key: string]: string } = {
 // Defina um tipo para o payload do seu token JWT
 export interface JwtPayload {
   type: string;
+  sub: string;
 }
 
 export function decodeToken(token: string | undefined): JwtPayload | null {
