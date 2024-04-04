@@ -27,25 +27,15 @@ import {
 import logo from "@public/logo.svg";
 import logoMais1Cafe from "@public/mais1cafe.png";
 import MenuHeader from "@/app/components/MenuHeader";
-import CreateNewClientForm from "./components/createNewClientForm";
-import CreateNewAdminForm from "./components/createNewAdminForm";
-import CreateNewPlanForm from "./components/createNewPlanForm";
-import EditClient from "./components/editClient";
+import CreateNewAdminForm from "./components/admin-components/createNewAdminForm";
+import CreateNewPlanForm from "./components/plan-components/createNewPlanForm";
 import { ClientIdProvider } from "@/app/contexts/ClientContext";
 import { NextPage } from "next";
 import { AdminProvider, useAdmin } from "@/app/contexts/AdminContext";
 import { decodeToken } from "@/middleware";
+import { AdminComponent } from "./components/client-components/adminComponents";
 
 export default function Dashboard() {
-  const [msgValidationCreateCliente, setMsgValidationCreateCliente] =
-    useState("");
-
-  const [widthMenu, setWidthMenu] = useState("w-20");
-
-  const [iconMenu, setIconMenu] = useState(true);
-
-  const [visibilityIconsMenu, setVisibilityIconsMenu] = useState("hidden");
-
   const [visibilityEditClient, setVisibilityEditClient] = useState("hidden");
 
   const [modalIsOpenPlan, setModalIsOpenPlan] = useState(false);
@@ -79,18 +69,6 @@ export default function Dashboard() {
       } catch (err: any) {
         console.error(err);
       }
-    }
-  }
-
-  function handleWidthMenu() {
-    if (widthMenu === "w-20") {
-      setWidthMenu("w-64");
-      setIconMenu(false);
-      setVisibilityIconsMenu("");
-    } else {
-      setWidthMenu("w-20");
-      setIconMenu(true);
-      setVisibilityIconsMenu("hidden");
     }
   }
 
@@ -138,35 +116,27 @@ export default function Dashboard() {
     <ClientIdProvider>
       <>
         <ToastContainer />
-        <header className="flex justify-between items-center p-5 relative z-10">
+        <header className="flex justify-between items-center  relative z-10">
           <figure className="w-72 h-16">
             <Image src={logo} alt="" className="w-full h-full object-contain" />
           </figure>
 
-          <MenuHeader logoutMethod={handleLagoutClient} />
-        </header>
-        <main className="flex items-start">
-          <header
-            className={`${widthMenu} flex justify-start items-center flex-col gap-7 h-screen bg-brand-600 p-5 transition-all relative z-10`}
-          >
-            <button onClick={handleWidthMenu}>
-              {iconMenu ? <List size={22} /> : <X size={22} />}
-            </button>
-
-            <div
-              className={`flex justify-center flex-col items-center gap-5 ${visibilityIconsMenu}`}
-            >
-              <figure className="w-32 h-32">
+          <div className="flex items-center gap-20 p-10">
+            <div className="flex items-center gap-5">
+              <figure className="w-16 h-16 border-white">
                 <Image
                   src={logoMais1Cafe}
                   alt=""
                   className="w-full h-full object-cover rounded-full"
                 />
               </figure>
-              <span>{name}</span>
+              <span>Dimas Camillo Felippe de Sá e Silva</span>
             </div>
-          </header>
 
+            <MenuHeader logoutMethod={handleLagoutClient} />
+          </div>
+        </header>
+        <main className="h-full">
           <section className="w-full p-5 relative z-10">
             <div className="flex gap-4">
               <button
@@ -174,15 +144,7 @@ export default function Dashboard() {
                 className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
               >
                 <UserCirclePlus size={40} />
-                <span>Criar Cliente</span>
-              </button>
-
-              <button
-                onClick={openModalPlan}
-                className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
-              >
-                <Money size={40} />
-                <span>Criar Plano</span>
+                <span>Área do Cliente</span>
               </button>
 
               <button
@@ -190,34 +152,21 @@ export default function Dashboard() {
                 className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
               >
                 <UserCircleGear size={40} />
-                <span>Criar Admin</span>
+                <span>Área do Admin</span>
               </button>
 
               <button
-                onClick={handleEditClientVisibility}
+                onClick={openModalPlan}
                 className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
               >
-                <PencilSimple size={40} />
-                <span>Editar Cliente</span>
+                <Money size={40} />
+                <span>Gerenciar Planos</span>
               </button>
             </div>
 
-            <CreateNewClientForm
-              modalIsOpenClient={modalIsOpenClient}
-              closeModalClient={closeModalClient}
-            />
-
-            <CreateNewAdminForm
-              closeModalAdmin={closeModalAdmin}
-              modalIsOpenAdmin={modalIsOpenAdmin}
-            />
-
-            <CreateNewPlanForm
-              closeModalPlan={closeModalPlan}
-              modalIsOpenPlan={modalIsOpenPlan}
-            />
-
-            <EditClient visibility={visibilityEditClient} />
+            <section>
+              <AdminComponent />
+            </section>
           </section>
         </main>
       </>

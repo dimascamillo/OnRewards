@@ -7,7 +7,6 @@ import { z } from "zod";
 import Modal from "react-modal";
 
 import { X } from "@phosphor-icons/react/dist/ssr";
-import useFormatCNPJ from "@/app/hook/useFormatCnpj";
 import { parseCookies } from "nookies";
 
 type NewPlanProps = {

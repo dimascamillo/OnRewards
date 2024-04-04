@@ -1,4 +1,3 @@
-// src/contexts/ClientIdContext.tsx
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface ClientIdContextData {

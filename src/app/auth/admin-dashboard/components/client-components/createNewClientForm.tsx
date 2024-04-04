@@ -16,17 +16,9 @@ const newClientFormSchema = z.object({
   password: z.string(),
 });
 
-type NewClientProps = {
-  closeModalClient: () => void;
-  modalIsOpenClient: boolean;
-};
-
 type NewClientFormSchema = z.infer<typeof newClientFormSchema>;
 
-export default function CreateNewClientForm({
-  closeModalClient,
-  modalIsOpenClient,
-}: NewClientProps) {
+export default function CreateNewClientForm() {
   const [msgValidationCreateCliente, setMsgValidationCreateCliente] =
     useState("");
 
@@ -66,33 +58,37 @@ export default function CreateNewClientForm({
       reset();
     } catch (err: any) {
       if (err.response && err.response.status === 409) {
-        setMsgValidationCreateCliente("E=mail ou CNPJ já cadastrado.");
+        msgErrorCreateClient("E=mail ou CNPJ já cadastrado.");
       } else if (err.response && err.response.status === 400) {
-        setMsgValidationCreateCliente("Todos os campos são obrigatórios");
+        msgErrorCreateClient("Todos os campos são obrigatórios");
       } else if (err.response && err.response.status === 400) {
-        setMsgValidationCreateCliente(
-          "A senha deve ter pelo menos 8 caracteres."
-        );
+        msgErrorCreateClient("A senha deve ter pelo menos 8 caracteres.");
       } else {
+        msgErrorCreateClient(err.message);
         console.error(err.message);
       }
     }
   }
 
+  function msgErrorCreateClient(msg: string) {
+    toast.error(msg, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  }
+
   return (
-    <Modal
-      isOpen={modalIsOpenClient}
-      onRequestClose={closeModalClient}
-      contentLabel="Novo Cliente Modal"
-      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-brand-600 rounded-lg 
-shadow-lg w-1/3 h-auto z-20"
-      overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20"
-    >
-      <button onClick={closeModalClient}>
-        <X size={15} className="absolute right-7" />
-      </button>
-      <h2 className="text-2xl mb-4">Cadastrar Novo Cliente</h2>
-      <form onSubmit={handleSubmit(handleCreateClient)}>
+    <div>
+      <h2 className="text-2xl my-10">Cadastrar Novo Cliente</h2>
+      <form
+        onSubmit={handleSubmit(handleCreateClient)}
+        className="flex items-center gap-5"
+      >
         <div>
           <label htmlFor="cnpjClient">CNPJ do Cliente</label>
           <input
@@ -138,19 +134,13 @@ shadow-lg w-1/3 h-auto z-20"
           />
         </div>
 
-        <div className="my-4">
-          <span className="text-red-400 font-semibold w-full">
-            {msgValidationCreateCliente}
-          </span>
-        </div>
-
         <button
           type="submit"
-          className="bg-green-500 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
+          className="bg-green-700 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
         >
           Criar
         </button>
       </form>
-    </Modal>
+    </div>
   );
 }
