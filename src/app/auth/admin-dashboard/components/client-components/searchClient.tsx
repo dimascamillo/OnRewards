@@ -8,6 +8,8 @@ import { z } from "zod";
 import EditClientModal from "./editClientModal";
 import { EditClientFormSchema } from "./editClientModal";
 import { useClientId } from "@/app/contexts/ClientContext";
+import { toast } from "react-toastify";
+import useMensageAlert from "@/app/hooks/useMensageAlert";
 
 const consultingClientFormSchema = z.object({
   context: z.string(),
@@ -17,6 +19,7 @@ type ConsultingClientFormSchema = z.infer<typeof consultingClientFormSchema>;
 
 export default function SearchClient() {
   const formatCNPJ = useFormatCNPJ();
+  const showMessage = useMensageAlert();
 
   const { setClientId } = useClientId();
 
@@ -60,7 +63,8 @@ export default function SearchClient() {
       reset();
     } catch (err: any) {
       if (err.response && err.response.status === 404) {
-        setClientNotFound("CNPJ não encontrado.");
+        showMessage({ type: "error", text: "CNPJ não encontrado." });
+        return;
       }
       console.error(err.message);
     }
@@ -90,6 +94,7 @@ export default function SearchClient() {
                 const formattedCNPJ = formatCNPJ(e.target.value);
                 setValue("context", formattedCNPJ);
               }}
+              maxLength={18}
             />
             <button
               className="bg-yellow-brand-400 text-black w-32 h-11 hover:bg-yellow-brand-500 transition-all rounded-e-sm"
@@ -99,7 +104,6 @@ export default function SearchClient() {
             </button>
           </div>
         </div>
-        <span className="text-red-600 font-semibold">{clientNotFound}</span>
       </form>
 
       <EditClientModal
