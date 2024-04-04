@@ -8,7 +8,6 @@ import { z } from "zod";
 import EditClientModal from "./editClientModal";
 import { EditClientFormSchema } from "./editClientModal";
 import { useClientId } from "@/app/contexts/ClientIdContext";
-import { toast } from "react-toastify";
 import useMensageAlert from "@/app/hooks/useMensageAlert";
 
 const consultingClientFormSchema = z.object({
@@ -23,7 +22,6 @@ export default function SearchClient() {
 
   const { setClientId } = useClientId();
 
-  const [clientNotFound, setClientNotFound] = useState("");
   const [modalIsOpenClient, setModalIsOpenClient] = useState(false);
   const [infoClient, setInfoClient] = useState<EditClientFormSchema | null>(
     null
@@ -57,7 +55,6 @@ export default function SearchClient() {
 
       setClientId(response.data.id);
       setInfoClient(response.data);
-      setClientNotFound("");
       openModalClient();
 
       reset();
@@ -66,7 +63,7 @@ export default function SearchClient() {
         showMessage({ type: "error", text: "CNPJ não encontrado." });
         return;
       }
-      console.error(err.message);
+      console.error(errors);
     }
   }
 
@@ -97,6 +94,7 @@ export default function SearchClient() {
               maxLength={18}
             />
             <button
+              disabled={isSubmitting}
               className="bg-yellow-brand-400 text-black w-32 h-11 hover:bg-yellow-brand-500 transition-all rounded-e-sm"
               type="submit"
             >

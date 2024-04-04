@@ -1,12 +1,11 @@
 import { useClientList } from "@/app/contexts/ListClientsContext";
 import { api } from "@/app/lib/axios";
 import { parseCookies } from "nookies";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { z } from "zod";
 
-import { Trash, PencilSimple } from "@phosphor-icons/react/dist/ssr";
+import { Trash } from "@phosphor-icons/react/dist/ssr";
 import { toast } from "react-toastify";
-import EditClientModal from "./editClientModal";
 
 export const dataClientSchema = z.object({
   id: z.string(),
@@ -14,8 +13,6 @@ export const dataClientSchema = z.object({
   cnpj: z.string(),
   email: z.string().email(),
 });
-
-type DataClientSchema = z.infer<typeof dataClientSchema>;
 
 function useUpdatedList() {
   const { clients, setClients } = useClientList();
@@ -43,8 +40,6 @@ function useUpdatedList() {
 export default function ListAllClients() {
   const { clients } = useUpdatedList();
 
-  const [modalIsOpenClient, setModalIsOpenClient] = useState(false);
-
   async function handleUpdateClient(id: string) {
     const cookies = parseCookies();
     const authToken = cookies.token;
@@ -68,14 +63,6 @@ export default function ListAllClients() {
     } catch (err: any) {
       console.error(err.message);
     }
-  }
-
-  function openModalClient() {
-    setModalIsOpenClient(true);
-  }
-
-  function closeModalClient() {
-    setModalIsOpenClient(false);
   }
 
   return (

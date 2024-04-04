@@ -1,13 +1,12 @@
 import { api } from "@/app/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import Modal from "react-modal";
 
 import { X } from "@phosphor-icons/react/dist/ssr";
-import useFormatCNPJ from "@/app/hooks/useFormatCnpj";
 import { parseCookies } from "nookies";
 import { useClientId } from "@/app/contexts/ClientIdContext";
 
@@ -17,11 +16,6 @@ const editClientFormSchema = z.object({
   name: z.string().optional(),
   email: z.string().email().optional(),
   password: z.string().optional(),
-});
-
-const infoPlanSchema = z.object({
-  id: z.string(),
-  name: z.string(),
 });
 
 type EditClientProps = {
@@ -34,8 +28,6 @@ type EditClientProps = {
 
 export type EditClientFormSchema = z.infer<typeof editClientFormSchema>;
 
-type InfoPlanSchema = z.infer<typeof infoPlanSchema>;
-
 export default function EditClientModal({
   closeModalClient,
   modalIsOpenClient,
@@ -44,9 +36,6 @@ export default function EditClientModal({
   getemail,
 }: EditClientProps) {
   const [choseMethodClient, setChoseMethodClient] = useState(false);
-
-  const cookies = parseCookies();
-  const authToken = cookies.token;
 
   const { clientId } = useClientId();
 
@@ -61,7 +50,7 @@ export default function EditClientModal({
   });
 
   async function handleUpdateClient(data: EditClientFormSchema) {
-    const { id, cnpj, name, email, password } = data;
+    const { cnpj, name, email, password } = data;
 
     const cookies = parseCookies();
     const authToken = cookies.token;
@@ -120,8 +109,8 @@ export default function EditClientModal({
 
         resetUpdateClient();
         closeModalClient();
-      } catch (err: any) {
-        console.error(err.message);
+      } catch {
+        console.error(errors);
       }
     }
   }
@@ -205,6 +194,7 @@ shadow-lg w-1/3 h-auto z-20"
 
           <button
             type="submit"
+            disabled={isSubmitting}
             onClick={changevalueMethodToTrue}
             className="bg-red-500 hover:bg-red-600 text-white transition-all w-28 h-12 rounded-lg"
           >

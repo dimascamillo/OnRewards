@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export default function useFormatCNPJ() {
   const formatCNPJ = (cnpj: string): string => {
     const numericCNPJ = cnpj.replace(/\D/g, "");
