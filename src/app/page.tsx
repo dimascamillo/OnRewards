@@ -7,7 +7,7 @@ import { AdminProvider } from "./contexts/AdminContext";
 
 export default function Home() {
   return (
-    <AdminProvider>
+    <>
       <header className="flex justify-between items-center p-5 relative z-10">
         <figure className="w-72 h-16">
           <a href="/">
@@ -39,6 +39,6 @@ export default function Home() {
           />
         </figure>
       </main>
-    </AdminProvider>
+    </>
   );
 }

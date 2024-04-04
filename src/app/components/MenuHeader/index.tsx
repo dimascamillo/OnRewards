@@ -11,9 +11,13 @@ export default function MenuHeader({ logoutMethod }: MenuHeaderProps) {
   const [hasToken, setHasToken] = useState(false);
 
   useEffect(() => {
-    const cookies = parseCookies();
-    const token = cookies.token;
-    setHasToken(!!token);
+    const checkToken = async () => {
+      const cookies = parseCookies();
+      const token = cookies.token;
+      setHasToken(!!token);
+    };
+
+    checkToken();
   }, []);
 
   return (
