@@ -23,9 +23,13 @@ import { ClientIdProvider } from "@/app/contexts/ClientIdContext";
 import { decodeToken } from "@/middleware";
 import { AdminComponent } from "./components/client-components/adminComponents";
 import { ClientProvider } from "@/app/contexts/ClientContext";
+import { useState } from "react";
 
 export default function Dashboard() {
   const router = useRouter();
+
+  const [statusVisibilityAdminComponent, setStatusVisibilityAdminComponent] =
+    useState("hidden");
 
   const cookies = parseCookies();
   const authToken = cookies.token;
@@ -52,6 +56,14 @@ export default function Dashboard() {
     destroyCookie(null, "token", { path: "/" });
     destroyCookie(null, "userType", { path: "/" });
     router.push("/auth/sign-in");
+  }
+
+  function handleVisibilityAdminComponent() {
+    if (statusVisibilityAdminComponent === "hidden") {
+      return setStatusVisibilityAdminComponent("");
+    }
+
+    return setStatusVisibilityAdminComponent("hidden");
   }
 
   getInfoAdmin();
@@ -88,7 +100,12 @@ export default function Dashboard() {
           <main className="h-full">
             <section className="w-full p-5 relative z-10">
               <div className="flex gap-4">
-                <button className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white">
+                <button
+                  onClick={() => {
+                    return handleVisibilityAdminComponent();
+                  }}
+                  className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
+                >
                   <UserCirclePlus size={40} />
                   <span>Área do Cliente</span>
                 </button>
@@ -105,7 +122,9 @@ export default function Dashboard() {
               </div>
 
               <section>
-                <AdminComponent />
+                <AdminComponent
+                  visibilityAdminComponent={statusVisibilityAdminComponent}
+                />
               </section>
             </section>
           </main>
