@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import EditClientModal from "./editClientModal";
 import { EditClientFormSchema } from "./editClientModal";
-import { useClientId } from "@/app/contexts/ClientContext";
+import { useClientId } from "@/app/contexts/ClientIdContext";
 import { toast } from "react-toastify";
 import useMensageAlert from "@/app/hooks/useMensageAlert";
 
@@ -82,7 +82,7 @@ export default function SearchClient() {
       <form onSubmit={handleSubmit(handleCreateClient)}>
         <div className="flex flex-col my-10">
           <label className="mb-3" htmlFor="">
-            Digite o CNPJ do Cliente
+            Editar Cliente
           </label>
           <div>
             <input

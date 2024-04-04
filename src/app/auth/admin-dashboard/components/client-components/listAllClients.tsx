@@ -4,8 +4,9 @@ import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 
-import { Trash } from "@phosphor-icons/react/dist/ssr";
+import { Trash, PencilSimple } from "@phosphor-icons/react/dist/ssr";
 import { toast } from "react-toastify";
+import EditClientModal from "./editClientModal";
 
 export const dataClientSchema = z.object({
   id: z.string(),
@@ -42,7 +43,7 @@ function useUpdatedList() {
 export default function ListAllClients() {
   const { clients } = useUpdatedList();
 
-  async function handleDeleteClient() {}
+  const [modalIsOpenClient, setModalIsOpenClient] = useState(false);
 
   async function handleUpdateClient(id: string) {
     const cookies = parseCookies();
@@ -67,6 +68,14 @@ export default function ListAllClients() {
     } catch (err: any) {
       console.error(err.message);
     }
+  }
+
+  function openModalClient() {
+    setModalIsOpenClient(true);
+  }
+
+  function closeModalClient() {
+    setModalIsOpenClient(false);
   }
 
   return (

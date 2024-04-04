@@ -14,7 +14,7 @@ import iconLeft from "@public/icon-left.svg";
 import iconRight from "@public/icon-right.svg";
 import logo from "@public/logo.svg";
 import logoOnBit from "@public/logo.png";
-import { ClientIdProvider } from "./contexts/ClientContext";
+import { ClientIdProvider } from "./contexts/ClientIdContext";
 
 export default function RootLayout({
   children,
