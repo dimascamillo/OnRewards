@@ -1,6 +1,9 @@
 import { z } from "zod";
 import CreateNewAdminForm from "./createNewAdminForm";
 
+import SearchAdmin from "./searchAdmin";
+import ListAllClients from "./listAllAdmin";
+
 const adminComponentsProps = z.object({
   visibilityAdminComponent: z.string(),
 });
@@ -14,6 +17,8 @@ export function AdminComponent({
     <div className={visibilityAdminComponent}>
       <>
         <CreateNewAdminForm />
+        {/* <ListAllClients />
+        <SearchAdmin /> */}
       </>
     </div>
   );
