@@ -4,17 +4,17 @@ import ListAllClients from "./listAllClients";
 import SearchClient from "./searchClient";
 import { z } from "zod";
 
-const adminComponentsProps = z.object({
-  visibilityAdminComponent: z.string(),
+const clientComponentsProps = z.object({
+  visibilityClientComponent: z.string(),
 });
 
-type AdminComponentsProps = z.infer<typeof adminComponentsProps>;
+type ClientComponentsProps = z.infer<typeof clientComponentsProps>;
 
-export function AdminComponent({
-  visibilityAdminComponent,
-}: AdminComponentsProps) {
+export function ClientComponent({
+  visibilityClientComponent,
+}: ClientComponentsProps) {
   return (
-    <div className={visibilityAdminComponent}>
+    <div className={visibilityClientComponent}>
       <ListClientProvider>
         <CreateNewClientForm />
         <SearchClient />

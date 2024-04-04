@@ -1,12 +1,9 @@
 import { api } from "@/app/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import Modal from "react-modal";
 
-import { X } from "@phosphor-icons/react/dist/ssr";
 import useFormatCNPJ from "@/app/hooks/useFormatCnpj";
 
 const newClientFormSchema = z.object({
@@ -19,9 +16,6 @@ const newClientFormSchema = z.object({
 type NewClientFormSchema = z.infer<typeof newClientFormSchema>;
 
 export default function CreateNewClientForm() {
-  const [msgValidationCreateCliente, setMsgValidationCreateCliente] =
-    useState("");
-
   const formatCNPJ = useFormatCNPJ();
 
   const {
@@ -65,7 +59,7 @@ export default function CreateNewClientForm() {
         msgErrorCreateClient("A senha deve ter pelo menos 8 caracteres.");
       } else {
         msgErrorCreateClient(err.message);
-        console.error(err.message);
+        console.error(errors);
       }
     }
   }
@@ -136,6 +130,7 @@ export default function CreateNewClientForm() {
 
         <button
           type="submit"
+          disabled={isSubmitting}
           className="bg-green-700 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
         >
           Criar

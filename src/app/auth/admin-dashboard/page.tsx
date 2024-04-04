@@ -21,14 +21,18 @@ import MenuHeader from "@/app/components/MenuHeader";
 import { ClientIdProvider } from "@/app/contexts/ClientIdContext";
 
 import { decodeToken } from "@/middleware";
-import { AdminComponent } from "./components/client-components/adminComponents";
+import { ClientComponent } from "./components/client-components/clientComponents";
 import { ClientProvider } from "@/app/contexts/ClientContext";
 import { useState } from "react";
+import { AdminComponent } from "./components/admin-components/adminComponents";
 
 export default function Dashboard() {
   const router = useRouter();
 
   const [statusVisibilityAdminComponent, setStatusVisibilityAdminComponent] =
+    useState("hidden");
+
+  const [statusVisibilityClientComponent, setStatusVisibilityClientComponent] =
     useState("hidden");
 
   const cookies = parseCookies();
@@ -60,10 +64,20 @@ export default function Dashboard() {
 
   function handleVisibilityAdminComponent() {
     if (statusVisibilityAdminComponent === "hidden") {
+      setStatusVisibilityClientComponent("hidden");
       return setStatusVisibilityAdminComponent("");
     }
 
     return setStatusVisibilityAdminComponent("hidden");
+  }
+
+  function handleVisibilityClientComponent() {
+    if (statusVisibilityClientComponent === "hidden") {
+      setStatusVisibilityAdminComponent("hidden");
+      return setStatusVisibilityClientComponent("");
+    }
+
+    return setStatusVisibilityClientComponent("hidden");
   }
 
   getInfoAdmin();
@@ -102,7 +116,7 @@ export default function Dashboard() {
               <div className="flex gap-4">
                 <button
                   onClick={() => {
-                    return handleVisibilityAdminComponent();
+                    return handleVisibilityClientComponent();
                   }}
                   className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
                 >
@@ -110,7 +124,12 @@ export default function Dashboard() {
                   <span>Área do Cliente</span>
                 </button>
 
-                <button className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white">
+                <button
+                  onClick={() => {
+                    return handleVisibilityAdminComponent();
+                  }}
+                  className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
+                >
                   <UserCircleGear size={40} />
                   <span>Área do Admin</span>
                 </button>
@@ -122,6 +141,10 @@ export default function Dashboard() {
               </div>
 
               <section>
+                <ClientComponent
+                  visibilityClientComponent={statusVisibilityClientComponent}
+                />
+
                 <AdminComponent
                   visibilityAdminComponent={statusVisibilityAdminComponent}
                 />

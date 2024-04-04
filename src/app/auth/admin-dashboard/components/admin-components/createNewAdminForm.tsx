@@ -1,13 +1,11 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import Modal from "react-modal";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import useFormatCPF from "@/app/hooks/useFormatCpf";
-
-import { X } from "@phosphor-icons/react/dist/ssr";
-import { parseCookies } from "nookies";
 import { api } from "@/app/lib/axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { z } from "zod";
+
+import useFormatCPF from "@/app/hooks/useFormatCpf";
+import { parseCookies } from "nookies";
 
 const newAdminFormSchema = z.object({
   name: z.string(),
@@ -18,15 +16,7 @@ const newAdminFormSchema = z.object({
 
 type NewAdminFormSchema = z.infer<typeof newAdminFormSchema>;
 
-type NewAdminProps = {
-  closeModalAdmin: () => void;
-  modalIsOpenAdmin: boolean;
-};
-
-export default function CreateNewAdminForm({
-  modalIsOpenAdmin,
-  closeModalAdmin,
-}: NewAdminProps) {
+export default function CreateNewAdminForm() {
   const formatCPF = useFormatCPF();
 
   const {
@@ -72,77 +62,71 @@ export default function CreateNewAdminForm({
       });
 
       reset();
-    } catch (err: any) {
-      console.error(err.message);
+    } catch {
+      console.error(errors);
     }
   }
 
   return (
-    <Modal
-      isOpen={modalIsOpenAdmin}
-      onRequestClose={closeModalAdmin}
-      contentLabel="Novo Admin Modal"
-      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-brand-600 rounded-lg 
-shadow-lg w-1/3 h-auto z-20"
-      overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20"
-    >
-      <button onClick={closeModalAdmin}>
-        <X size={15} className="absolute right-7" />
-      </button>
-      <h2 className="text-2xl mb-4">Cadastrar Novo Admin</h2>
-      <form onSubmit={handleSubmit(handleCreateAdmin)}>
+    <div>
+      <h2 className="text-2xl my-10">Cadastrar Novo Colaborador</h2>
+      <form
+        onSubmit={handleSubmit(handleCreateAdmin)}
+        className="flex items-center gap-5"
+      >
         <div>
-          <label htmlFor="cpfClient">CPF do Admin</label>
+          <label htmlFor="cnpjClient">CPF do Colaborador</label>
           <input
             type="text"
             className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-            placeholder="Digite o CPF do Admin"
+            placeholder="Digite o CPF do Colaborador"
             {...register("cpf")}
             onChange={(e) => {
               const formattedCPF = formatCPF(e.target.value);
               setValue("cpf", formattedCPF);
             }}
-            maxLength={14}
+            maxLength={18}
           />
         </div>
 
         <div>
-          <label htmlFor="nameClient">Nome do Admin</label>
+          <label htmlFor="nameClient">Nome do Colaborador</label>
           <input
             type="text"
             className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-            placeholder="Digite o Nome do Admin"
+            placeholder="Digite o Nome do Colaborador"
             {...register("name")}
           />
         </div>
 
         <div>
-          <label htmlFor="emailClient">E-mail do Admin</label>
+          <label htmlFor="emailClient">E-mail do Colaborador</label>
           <input
             type="email"
             className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-            placeholder="Digite o E-mail do Admin"
+            placeholder="Digite o E-mail do Colaborador"
             {...register("email")}
           />
         </div>
 
         <div>
-          <label htmlFor="passwordClient">Password do Admin</label>
+          <label htmlFor="passwordClient">Password do Colaborador</label>
           <input
             type="password"
             className="text-black mb-6 p-2 border border-gray-300 rounded-lg w-full"
-            placeholder="Digite a Senha do Admin"
+            placeholder="Digite a Senha do Colaborador"
             {...register("password")}
           />
         </div>
 
         <button
           type="submit"
-          className="bg-green-500 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
+          disabled={isSubmitting}
+          className="bg-green-700 hover:bg-green-600 text-white transition-all w-28 h-12 rounded-lg"
         >
           Criar
         </button>
       </form>
-    </Modal>
+    </div>
   );
 }
