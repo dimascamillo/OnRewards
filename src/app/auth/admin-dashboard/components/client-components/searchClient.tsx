@@ -9,6 +9,7 @@ import EditClientModal from "./editClientModal";
 import { EditClientFormSchema } from "./editClientModal";
 import { useClientId } from "@/app/contexts/ClientIdContext";
 import useMensageAlert from "@/app/hooks/useMensageAlert";
+import { X } from "@phosphor-icons/react/dist/ssr";
 
 const consultingClientFormSchema = z.object({
   context: z.string(),
@@ -74,6 +75,10 @@ export default function SearchClient() {
   function closeModalClient() {
     setModalIsOpenClient(false);
   }
+
+  function handleResetSearcgCNPJ() {
+    reset();
+  }
   return (
     <>
       <form onSubmit={handleSubmit(handleCreateClient)}>
@@ -81,18 +86,27 @@ export default function SearchClient() {
           <label className="mb-3" htmlFor="">
             Editar Cliente
           </label>
-          <div>
-            <input
-              className="text-black w-1/4 h-11 px-3 rounded-s-sm"
-              type="text"
-              placeholder="Digite apenas números"
-              {...register("context")}
-              onChange={(e) => {
-                const formattedCNPJ = formatCNPJ(e.target.value);
-                setValue("context", formattedCNPJ);
-              }}
-              maxLength={18}
-            />
+          <div className="flex justify-start">
+            <div className="relative">
+              <input
+                className="text-black w-full h-11 px-3 rounded-s-sm"
+                type="text"
+                placeholder="Digite apenas números"
+                {...register("context")}
+                onChange={(e) => {
+                  const formattedCNPJ = formatCNPJ(e.target.value);
+                  setValue("context", formattedCNPJ);
+                }}
+                maxLength={18}
+              />
+              <button type="button">
+                <X
+                  onClick={handleResetSearcgCNPJ}
+                  className="text-black absolute right-2 top-4"
+                  size={15}
+                />
+              </button>
+            </div>
             <button
               disabled={isSubmitting}
               className="bg-yellow-brand-400 text-black w-32 h-11 hover:bg-yellow-brand-500 transition-all rounded-e-sm"

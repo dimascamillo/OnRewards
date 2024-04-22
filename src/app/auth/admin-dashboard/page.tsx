@@ -9,9 +9,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
-  UserCirclePlus,
   Money,
   UserCircleGear,
+  UserCircle,
 } from "@phosphor-icons/react/dist/ssr";
 
 import logo from "@public/logo.svg";
@@ -120,7 +120,7 @@ export default function Dashboard() {
                   }}
                   className=" w-1/6 h-24 flex justify-center items-center gap-4 bg-yellow-brand-400 border-yellow-400 border-2 hover:bg-transparent  rounded-lg transition-all cursor-pointer text-black hover:text-white"
                 >
-                  <UserCirclePlus size={40} />
+                  <UserCircle size={40} />
                   <span>Área do Cliente</span>
                 </button>
 
