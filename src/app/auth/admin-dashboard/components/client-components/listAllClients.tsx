@@ -1,11 +1,12 @@
 import { useClientList } from "@/app/contexts/ListClientsContext";
 import { api } from "@/app/lib/axios";
 import { parseCookies } from "nookies";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
-import { Trash } from "@phosphor-icons/react/dist/ssr";
+import { PencilSimpleLine, Trash } from "@phosphor-icons/react/dist/ssr";
 import { toast } from "react-toastify";
+import EditClientModal from "./editClientModal";
 
 export const dataClientSchema = z.object({
   id: z.string(),
@@ -15,6 +16,8 @@ export const dataClientSchema = z.object({
 });
 
 function useUpdatedList() {
+  const [updateList, setUpdateList] = useState(false);
+
   const { clients, setClients } = useClientList();
   const cookies = parseCookies();
   const authToken = cookies.token;
@@ -31,14 +34,31 @@ function useUpdatedList() {
       setClients(listAllClients);
     }
 
-    getAllClientList();
+    console.log(clients);
+
+    if (updateList || clients.length !== 0) {
+      getAllClientList();
+      setUpdateList(false);
+    }
   }, [authToken, setClients]);
 
-  return { clients };
+  return { clients, setUpdateList };
 }
 
 export default function ListAllClients() {
-  const { clients } = useUpdatedList();
+  const { clients, setUpdateList } = useUpdatedList();
+
+  const [modalIsOpenClient, setModalIsOpenClient] = useState(false);
+  const [infoClient, setInfoClient] = useState(null);
+
+  const openModalClient = (client: unknown) => {
+    setInfoClient(client);
+    setModalIsOpenClient(true);
+  };
+
+  const closeModalClient = () => {
+    setModalIsOpenClient(false);
+  };
 
   async function handleUpdateClient(id: string) {
     const cookies = parseCookies();
@@ -85,18 +105,35 @@ export default function ListAllClients() {
                 <td className="p-4">{client.cnpj}</td>
                 <td className="p-4">{client.email}</td>
                 <td className="p-4">
-                  <button
-                    onClick={() => handleUpdateClient(client.id)}
-                    className="text-red-600 bg-white rounded-md w-8 h-8 text-center transition-all hover:bg-red-600 hover:text-white"
-                  >
-                    <Trash size={25} className=" m-auto" />
-                  </button>
+                  <div className="flex justify-center gap-4">
+                    <button
+                      onClick={() => openModalClient(client)}
+                      className="text-blue-600 bg-white rounded-md w-8 h-8 text-center transition-all hover:bg-blue-600 hover:text-white"
+                    >
+                      <PencilSimpleLine size={25} className=" m-auto" />
+                    </button>
+
+                    <button
+                      onClick={() => handleUpdateClient(client.id)}
+                      className="text-red-600 bg-white rounded-md w-8 h-8 text-center transition-all hover:bg-red-600 hover:text-white"
+                    >
+                      <Trash size={25} className=" m-auto" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+
+      <EditClientModal
+        modalIsOpenClient={modalIsOpenClient}
+        closeModalClient={closeModalClient}
+        getcnpj={infoClient?.cnpj ?? ""}
+        getname={infoClient?.name ?? ""}
+        getemail={infoClient?.email ?? ""}
+      />
     </div>
   );
 }
