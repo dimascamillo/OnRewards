@@ -1,4 +1,3 @@
-import { useClientList } from "@/app/contexts/ListClientsContext";
 import { api } from "@/app/lib/axios";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
@@ -15,43 +14,32 @@ export const dataClientSchema = z.object({
   email: z.string().email(),
 });
 
-function useUpdatedList() {
-  const [updateList, setUpdateList] = useState(false);
+type DataClientSchema = z.infer<typeof dataClientSchema>;
 
-  const { clients, setClients } = useClientList();
+export default function ListAllClients() {
+  const [clients, setClients] = useState<DataClientSchema[]>([]);
   const cookies = parseCookies();
   const authToken = cookies.token;
 
+  async function getAllClientList() {
+    const response = await api.get("/allclients", {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    const listAllClients = response.data;
+    setClients(listAllClients);
+  }
+
   useEffect(() => {
-    async function getAllClientList() {
-      const response = await api.get("/allclients", {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-
-      const listAllClients = response.data;
-      setClients(listAllClients);
-    }
-
-    console.log(clients);
-
-    if (updateList || clients.length !== 0) {
-      getAllClientList();
-      setUpdateList(false);
-    }
-  }, [authToken, setClients]);
-
-  return { clients, setUpdateList };
-}
-
-export default function ListAllClients() {
-  const { clients, setUpdateList } = useUpdatedList();
+    getAllClientList();
+  }, []);
 
   const [modalIsOpenClient, setModalIsOpenClient] = useState(false);
-  const [infoClient, setInfoClient] = useState(null);
+  const [infoClient, setInfoClient] = useState<DataClientSchema>();
 
-  const openModalClient = (client: unknown) => {
+  const openModalClient = (client: DataClientSchema) => {
     setInfoClient(client);
     setModalIsOpenClient(true);
   };
