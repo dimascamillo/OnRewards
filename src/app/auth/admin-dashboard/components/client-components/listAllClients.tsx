@@ -1,11 +1,12 @@
 import { api } from "@/app/lib/axios";
 import { parseCookies } from "nookies";
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { z } from "zod";
 
 import { PencilSimpleLine, Trash } from "@phosphor-icons/react/dist/ssr";
 import { toast } from "react-toastify";
 import EditClientModal from "./editClientModal";
+import { ListClientsContext } from "@/app/contexts/ListClientsContext";
 
 export const dataClientSchema = z.object({
   id: z.string(),
@@ -17,27 +18,10 @@ export const dataClientSchema = z.object({
 type DataClientSchema = z.infer<typeof dataClientSchema>;
 
 export default function ListAllClients() {
-  const [clients, setClients] = useState<DataClientSchema[]>([]);
-  const cookies = parseCookies();
-  const authToken = cookies.token;
-
-  async function getAllClientList() {
-    const response = await api.get("/allclients", {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-
-    const listAllClients = response.data;
-    setClients(listAllClients);
-  }
-
-  useEffect(() => {
-    getAllClientList();
-  }, []);
-
   const [modalIsOpenClient, setModalIsOpenClient] = useState(false);
   const [infoClient, setInfoClient] = useState<DataClientSchema>();
+
+  const { listClients } = useContext(ListClientsContext);
 
   const openModalClient = (client: DataClientSchema) => {
     setInfoClient(client);
@@ -86,7 +70,7 @@ export default function ListAllClients() {
         </thead>
 
         <tbody className="text-center">
-          {clients.map((client) => {
+          {listClients.map((client) => {
             return (
               <tr className="bg-brand-600" key={client.id}>
                 <td className="p-4">{client.name}</td>
