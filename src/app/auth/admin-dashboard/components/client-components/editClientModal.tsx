@@ -1,6 +1,6 @@
 import { api } from "@/app/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
@@ -9,6 +9,7 @@ import Modal from "react-modal";
 import { X } from "@phosphor-icons/react/dist/ssr";
 import { parseCookies } from "nookies";
 import { useClientId } from "@/app/contexts/ClientIdContext";
+import { ListClientsContext } from "@/app/contexts/ListClientsContext";
 
 const editClientFormSchema = z.object({
   id: z.string().optional(),
@@ -38,6 +39,8 @@ export default function EditClientModal({
   const [choseMethodClient, setChoseMethodClient] = useState(false);
 
   const { clientId } = useClientId();
+
+  const { updateClientsList } = useContext(ListClientsContext);
 
   const {
     register: registerUpdateClient,
@@ -82,6 +85,7 @@ export default function EditClientModal({
           progress: undefined,
         });
 
+        updateClientsList();
         resetUpdateClient();
         closeModalClient();
       } catch (err: any) {
@@ -106,7 +110,7 @@ export default function EditClientModal({
           draggable: true,
           progress: undefined,
         });
-
+        updateClientsList();
         resetUpdateClient();
         closeModalClient();
       } catch {
