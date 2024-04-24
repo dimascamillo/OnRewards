@@ -8,8 +8,6 @@ const userTypeRoutes: { [key: string]: string } = {
   "1": "/auth/client-dashboard",
   "2": "/auth/manager-dashboard",
 };
-
-// Defina um tipo para o payload do seu token JWT
 export interface JwtPayload {
   type: string;
   sub: string;

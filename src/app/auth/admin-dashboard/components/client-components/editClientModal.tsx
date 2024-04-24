@@ -8,7 +8,6 @@ import Modal from "react-modal";
 
 import { X } from "@phosphor-icons/react/dist/ssr";
 import { parseCookies } from "nookies";
-import { useClientId } from "@/app/contexts/ClientIdContext";
 import { ListClientsContext } from "@/app/contexts/ListClientsContext";
 
 const editClientFormSchema = z.object({
@@ -38,8 +37,6 @@ export default function EditClientModal({
 }: EditClientProps) {
   const [choseMethodClient, setChoseMethodClient] = useState(false);
 
-  const { clientId } = useClientId();
-
   const { updateClientsList } = useContext(ListClientsContext);
 
   const {
@@ -58,7 +55,7 @@ export default function EditClientModal({
     const cookies = parseCookies();
     const authToken = cookies.token;
 
-    if (!choseMethodClient) {
+    /* if (!choseMethodClient) {
       try {
         await api.patch(
           `/updateClient/${clientId}`,
@@ -91,7 +88,7 @@ export default function EditClientModal({
       } catch (err: any) {
         console.error(err.message);
       }
-    }
+    } */
 
     if (choseMethodClient) {
       try {
@@ -143,7 +140,7 @@ shadow-lg w-1/3 h-auto z-20"
       <button onClick={closeModalClient}>
         <X size={15} className="absolute right-7" />
       </button>
-      <h2 className="text-2xl mb-4">Editiar Cliente</h2>
+      <h2 className="text-2xl mb-4">Editar Cliente</h2>
       <form onSubmit={handleSubmitUpdateClient(handleUpdateClient)}>
         <div>
           <label htmlFor="cnpjClient">CNPJ do Cliente</label>

@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import EditClientModal from "./editClientModal";
 import { EditClientFormSchema } from "./editClientModal";
-import { useClientId } from "@/app/contexts/ClientIdContext";
 import useMensageAlert from "@/app/hooks/useMensageAlert";
 import { X } from "@phosphor-icons/react/dist/ssr";
 
@@ -20,8 +19,6 @@ type ConsultingClientFormSchema = z.infer<typeof consultingClientFormSchema>;
 export default function SearchClient() {
   const formatCNPJ = useFormatCNPJ();
   const showMessage = useMensageAlert();
-
-  const { setClientId } = useClientId();
 
   const [modalIsOpenClient, setModalIsOpenClient] = useState(false);
   const [infoClient, setInfoClient] = useState<EditClientFormSchema | null>(
@@ -54,7 +51,6 @@ export default function SearchClient() {
         },
       });
 
-      setClientId(response.data.id);
       setInfoClient(response.data);
       openModalClient();
 

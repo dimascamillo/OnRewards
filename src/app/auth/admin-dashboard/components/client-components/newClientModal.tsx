@@ -99,7 +99,7 @@ shadow-lg w-1/3 h-auto z-20"
       <button onClick={closeModalClient}>
         <X size={15} className="absolute right-7" />
       </button>
-      <h2 className="text-2xl mb-4">Editiar Cliente</h2>
+      <h2 className="text-2xl mb-4">Editar Cliente</h2>
       <form onSubmit={handleSubmitUpdateClient(handleUpdateClient)}>
         <div>
           <label htmlFor="cnpjClient">CNPJ do Cliente</label>

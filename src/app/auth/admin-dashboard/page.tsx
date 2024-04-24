@@ -18,8 +18,6 @@ import logo from "@public/logo.svg";
 import logoMais1Cafe from "@public/mais1cafe.png";
 import MenuHeader from "@/app/components/MenuHeader";
 
-import { ClientIdProvider } from "@/app/contexts/ClientIdContext";
-
 import { decodeToken } from "@/middleware";
 import { ClientComponent } from "./components/client-components/clientComponents";
 import { ClientProvider } from "@/app/contexts/ClientContext";
@@ -83,7 +81,7 @@ export default function Dashboard() {
   getInfoAdmin();
 
   return (
-    <ClientIdProvider>
+    <>
       <ClientProvider>
         <>
           <ToastContainer />
@@ -153,6 +151,6 @@ export default function Dashboard() {
           </main>
         </>
       </ClientProvider>
-    </ClientIdProvider>
+    </>
   );
 }
