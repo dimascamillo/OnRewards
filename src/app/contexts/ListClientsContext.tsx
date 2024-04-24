@@ -11,6 +11,7 @@ interface ListClient {
 
 interface ListClientsContextType {
   listClients: ListClient[];
+  updateClientsList: () => void;
 }
 
 interface ListClientsProviderProps {
@@ -35,12 +36,18 @@ export function ListClientsProvider({ children }: ListClientsProviderProps) {
     setClients(listAllClients);
   }
 
+  const updateClientsList = async () => {
+    await getAllClientList();
+  };
+
   useEffect(() => {
     getAllClientList();
   }, []);
 
   return (
-    <ListClientsContext.Provider value={{ listClients: clients }}>
+    <ListClientsContext.Provider
+      value={{ listClients: clients, updateClientsList }}
+    >
       {children}
     </ListClientsContext.Provider>
   );

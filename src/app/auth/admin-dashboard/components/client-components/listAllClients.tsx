@@ -21,7 +21,7 @@ export default function ListAllClients() {
   const [modalIsOpenClient, setModalIsOpenClient] = useState(false);
   const [infoClient, setInfoClient] = useState<DataClientSchema>();
 
-  const { listClients } = useContext(ListClientsContext);
+  const { listClients, updateClientsList } = useContext(ListClientsContext);
 
   const openModalClient = (client: DataClientSchema) => {
     setInfoClient(client);
@@ -32,7 +32,7 @@ export default function ListAllClients() {
     setModalIsOpenClient(false);
   };
 
-  async function handleUpdateClient(id: string) {
+  async function handleDeleteClient(id: string) {
     const cookies = parseCookies();
     const authToken = cookies.token;
 
@@ -52,6 +52,7 @@ export default function ListAllClients() {
         draggable: true,
         progress: undefined,
       });
+      updateClientsList();
     } catch (err: any) {
       console.error(err.message);
     }
@@ -86,7 +87,7 @@ export default function ListAllClients() {
                     </button>
 
                     <button
-                      onClick={() => handleUpdateClient(client.id)}
+                      onClick={() => handleDeleteClient(client.id)}
                       className="text-red-600 bg-white rounded-md w-8 h-8 text-center transition-all hover:bg-red-600 hover:text-white"
                     >
                       <Trash size={25} className=" m-auto" />

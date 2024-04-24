@@ -6,6 +6,8 @@ import { z } from "zod";
 import Modal from "react-modal";
 
 import { X } from "@phosphor-icons/react/dist/ssr";
+import { ListClientsContext } from "@/app/contexts/ListClientsContext";
+import { useContext } from "react";
 
 const newClientFormSchema = z.object({
   cnpj: z.string(),
@@ -25,6 +27,8 @@ export default function NewClientModal({
   closeModalClient,
   modalIsOpenClient,
 }: NewClientProps) {
+  const { updateClientsList } = useContext(ListClientsContext);
+
   const {
     register: registerUpdateClient,
     handleSubmit: handleSubmitUpdateClient,
@@ -55,6 +59,7 @@ export default function NewClientModal({
         progress: undefined,
       });
 
+      updateClientsList();
       resetUpdateClient();
     } catch (err: any) {
       if (err.response && err.response.status === 409) {
