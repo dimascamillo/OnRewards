@@ -73,7 +73,7 @@ export default function Signin() {
       if (err.response && err.response.status === 401) {
         setPasswordLengthInvalid("Usuário ou senha incorreto.");
       } else {
-        console.error(err.message);
+        console.error(errors);
       }
     }
   }

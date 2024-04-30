@@ -1,34 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import cookie from "cookie";
-import jwt from "jsonwebtoken";
+import { decodeToken } from "./app/utils/decodeToken";
 
 const userTypeRoutes: { [key: string]: string } = {
   "0": "/auth/admin-dashboard",
   "1": "/auth/client-dashboard",
   "2": "/auth/manager-dashboard",
 };
-export interface JwtPayload {
-  type: string;
-  sub: string;
-}
-
-export function decodeToken(token: string | undefined): JwtPayload | null {
-  if (!token) {
-    return null;
-  }
-
-  try {
-    const decoded = jwt.decode(token) as JwtPayload | null;
-    if (decoded && typeof decoded === "object" && "type" in decoded) {
-      return decoded;
-    }
-  } catch (error) {
-    console.error("Failed to decode token:", error);
-  }
-
-  return null;
-}
 export async function middleware(request: NextRequest) {
   const cookies = cookie.parse(request.headers.get("Cookie") || "");
   const token = cookies["token"];

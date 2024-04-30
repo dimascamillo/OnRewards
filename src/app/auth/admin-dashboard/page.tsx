@@ -18,11 +18,11 @@ import logo from "@public/logo.svg";
 import logoMais1Cafe from "@public/mais1cafe.png";
 import MenuHeader from "@/app/components/MenuHeader";
 
-import { decodeToken } from "@/middleware";
 import { ClientComponent } from "./components/client-components/clientComponents";
 import { ClientProvider } from "@/app/contexts/ClientContext";
 import { useState } from "react";
 import { AdminComponent } from "./components/admin-components/adminComponents";
+import { decodeToken } from "@/app/utils/decodeToken";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -57,7 +57,7 @@ export default function Dashboard() {
   function handleLagoutClient() {
     destroyCookie(null, "token", { path: "/" });
     destroyCookie(null, "userType", { path: "/" });
-    router.push("/auth/sign-in");
+    router.push("/sign-in");
   }
 
   function handleVisibilityAdminComponent() {
