@@ -70,7 +70,7 @@ export default function Home() {
           id="comunidade"
           className="flex justify-center gap-8 items-center my-32"
         >
-          <aside className="w-1/4 flex flex-col gap-8">
+          <aside className="w-1/4 flex flex-col gap-8 relative z-10">
             <h2 className="text-3xl font-medium">
               Faça parte da maior comunidade de varejistas!
             </h2>
