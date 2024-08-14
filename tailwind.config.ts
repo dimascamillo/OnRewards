@@ -11,6 +11,8 @@ const config: Config = {
       colors: {
         "background-primary": "#171E26",
         "yellow-primary-400": "#F4BC1D",
+        "purple-primary-700": "#4a1377",
+        "red-primary-400": "#E34242",
       },
     },
   },

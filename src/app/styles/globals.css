@@ -16,3 +16,45 @@
   width: 100%;
   height: 358px;
 }
+
+#footer-primary {
+  position: relative;
+}
+
+#footer-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: url("/bg-footer.svg");
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+}
+
+#comunidade {
+  position: relative;
+}
+
+#comunidade::before {
+  content: "";
+  position: absolute;
+  top: -140px;
+  left: 0;
+  background: url("/icon-left.svg");
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 631px;
+  z-index: 10;
+}
+
+#comunidade::after {
+  content: "";
+  position: absolute;
+  top: -168px;
+  right: -1400px;
+  background: url("/icon-right.svg");
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 652px;
+}
