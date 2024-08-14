@@ -43,7 +43,7 @@
   left: 0;
   background: url("/icon-left.svg");
   background-repeat: no-repeat;
-  width: 100%;
+  width: 300px;
   height: 631px;
 }
 
@@ -51,9 +51,9 @@
   content: "";
   position: absolute;
   top: -168px;
-  right: -1400px;
+  right: 0;
   background: url("/icon-right.svg");
   background-repeat: no-repeat;
-  width: 100%;
+  width: 300px;
   height: 652px;
 }
