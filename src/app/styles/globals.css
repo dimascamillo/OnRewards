@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#header-primary {
+  position: relative;
+}
+
+#header-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: url("/effect-top-header.svg");
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 358px;
+}
