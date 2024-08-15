@@ -1,36 +1,24 @@
 import Image from "next/image";
 import YellowPrimary from "./components/Buttons/YellowPrimary";
 import Transparent from "./components/Buttons/Transparent";
-import Link from "next/link";
 import RedPrimary from "./components/Buttons/RedPrimary";
+import Header from "./components/Header";
 
 export default function Home() {
   return (
     <>
-      <header
-        id="header-primary"
-        className="flex justify-between items-center p-8"
-      >
-        <Link href={"/"}>
-          <figure className="relative z-10">
-            <Image src="/logo.svg" width={200} height={200} alt="logo" />
-          </figure>
-        </Link>
+      <Header>
+        <li>
+          <YellowPrimary content="Entrar" url="/pages/signin" />
+        </li>
+        <li>
+          <Transparent content="Cadastrar" url="/pages/signup" />
+        </li>
+      </Header>
 
-        <nav className="relative z-10">
-          <ul className="flex gap-4">
-            <li>
-              <YellowPrimary content="Entrar" url="/pages/signin" />
-            </li>
-            <li>
-              <Transparent content="Cadastrar" url="/pages/signup" />
-            </li>
-          </ul>
-        </nav>
-      </header>
       <main className="relative z-10">
         <section className="text-center">
-          <h1 className="text-6xl font-bold ">Lorem ipsum dolor sit amet.</h1>
+          <h1 className="text-6xl font-bold">Lorem ipsum dolor sit amet.</h1>
           <p className="text-sm mt-8">
             Lorem ipsum, dolor sit amet consectetur adipisicing elit.
           </p>
@@ -48,15 +36,16 @@ export default function Home() {
             </h2>
 
             <div className="flex gap-4 my-8 flex-wrap">
-              <p className="w-auto h-12 text-white flex justify-center items-center bg-yellow-primary-400 rounded-md p-6">
-                Delisted Assets
-              </p>
-              <p className="w-auto h-12 text-white flex justify-center items-center bg-yellow-primary-400 rounded-md p-6">
-                Featured
-              </p>
-              <p className="w-auto h-12 text-white flex justify-center items-center bg-yellow-primary-400 rounded-md p-6">
-                Research Announcement
-              </p>
+              {["Delisted Assets", "Featured", "Research Announcement"].map(
+                (text) => (
+                  <p
+                    key={text}
+                    className="w-auto h-12 text-white flex justify-center items-center bg-yellow-primary-400 rounded-md p-6"
+                  >
+                    {text}
+                  </p>
+                )
+              )}
             </div>
 
             <p>
@@ -117,61 +106,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <footer
-        id="footer-primary"
-        className="mt-[300px] h-[479px] flex justify-center p-12 items-center"
-      >
-        <section className="relative z-10 flex gap-8">
-          <div className="w-1/3">
-            <figure>
-              <Image src="/logo.svg" width={200} height={200} alt="" />
-            </figure>
-
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum,
-              mollitia. Praesentium consequatur qui repellat exercitationem,
-              inventore labore doloremque eveniet tenetur perspiciatis dolorem
-              maxime vero. Libero doloribus cumque porro nisi cum!
-            </p>
-          </div>
-
-          <div className="w-1/3">
-            <h2 className="text-xl font-medium border-b-2 border-yellow-primary-400 mb-4">
-              Links úteis
-            </h2>
-
-            <ul className="flex flex-col gap-2">
-              <li className="hover:text-yellow-primary-400 inline-block">
-                <Link href={"/pages/signin"}>Entrar</Link>
-              </li>
-              <li className="hover:text-yellow-primary-400 inline-block">
-                <Link href={"/pages/signup"}>Cadastrar</Link>
-              </li>
-              <li className="hover:text-yellow-primary-400 inline-block">
-                <Link href={"/pages/contact"}>Contato</Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="w-1/3">
-            <h2 className="text-xl font-medium border-b-2 border-yellow-primary-400 mb-4">
-              Ajuda
-            </h2>
-
-            <ul className="flex flex-col gap-2">
-              <li className="hover:text-yellow-primary-400 inline-block">
-                <Link href={"/pages/signin"}>Suporte</Link>
-              </li>
-              <li className="hover:text-yellow-primary-400 inline-block">
-                <Link href={"/pages/signup"}>Termos e Condições</Link>
-              </li>
-              <li className="hover:text-yellow-primary-400 inline-block">
-                <Link href={"/pages/contact"}>Política de Privacidade</Link>
-              </li>
-            </ul>
-          </div>
-        </section>
-      </footer>
     </>
   );
 }
