@@ -59,7 +59,7 @@ export default function SignIn() {
 
           <div className="flex flex-col gap-5 mt-6">
             <label className="text-left text-2xl font-medium" htmlFor="email">
-              Password
+              Senha
             </label>
             <InputGeneric
               name="password"
