@@ -35,7 +35,7 @@ export default function SignUp() {
     <>
       <Header>
         <li>
-          <Transparent content="Cadastrar" url="/pages/signup" />
+          <Transparent content="Entrar" url="/pages/signin" />
         </li>
       </Header>
       <main className="relative z-10 text-center">
