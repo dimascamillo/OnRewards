@@ -14,6 +14,8 @@ const config: Config = {
         "purple-primary-700": "#4a1377",
         "red-primary-400": "#E34242",
         "gray-primary-500": "#24303E",
+        "blue-primary-400": "#263240",
+        "blue-primary-700": "#303F50",
       },
     },
   },

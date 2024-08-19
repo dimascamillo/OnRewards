@@ -1,11 +1,12 @@
 "use client";
 
-import Transparent from "@/app/components/Buttons/Transparent";
 import InputGeneric from "@/app/components/Form/Input";
 import YellowButton from "@/app/components/Form/YellowButton";
 import Header from "@/app/components/Header";
+import Transparent from "@/app/components/Links/Transparent";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -27,8 +28,10 @@ export default function SignIn() {
     resolver: zodResolver(signinShcema),
   });
 
-  function handleSignin(data: SigninShcema) {
-    console.log(data);
+  const router = useRouter();
+
+  function handleSignin() {
+    router.push("/pages/clients/user");
   }
 
   return (

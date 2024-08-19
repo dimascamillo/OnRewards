@@ -1,8 +1,9 @@
 import Image from "next/image";
-import YellowPrimary from "./components/Buttons/YellowPrimary";
-import Transparent from "./components/Buttons/Transparent";
-import RedPrimary from "./components/Buttons/RedPrimary";
+
 import Header from "./components/Header";
+import YellowPrimary from "./components/Links/YellowPrimary";
+import Transparent from "./components/Links/Transparent";
+import RedPrimary from "./components/Links/RedPrimary";
 
 export default function Home() {
   return (

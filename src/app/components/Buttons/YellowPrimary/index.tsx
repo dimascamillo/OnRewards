@@ -1,17 +1,20 @@
-import Link from "next/link";
-
 interface YellowButtonProps {
   content: string;
-  url: string;
+  onClick: () => void;
+  className: string;
 }
 
-export default function YellowPrimary({ content, url }: YellowButtonProps) {
+export default function ButtonYellowPrimary({
+  content,
+  onClick,
+  className,
+}: YellowButtonProps) {
   return (
-    <Link
-      className="bg-yellow-primary-400 text-white h-11 w-28 rounded-md transition-all border-2 border-yellow-primary-400 hover:bg-transparent hover:border-yellow-primary-400 flex justify-center items-center"
-      href={url}
+    <button
+      className={`${className} bg-yellow-primary-400 text-white h-11 w-auto p-4 rounded-md transition-all border-2 border-yellow-primary-400 hover:bg-transparent hover:border-yellow-primary-400 flex justify-center items-center`}
+      onClick={onClick}
     >
       {content}
-    </Link>
+    </button>
   );
 }

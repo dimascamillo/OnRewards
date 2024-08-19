@@ -19,7 +19,7 @@ export default function Header({ children }: HeaderProps) {
       </Link>
 
       <nav className="relative z-10">
-        <ul className="flex gap-4">{children}</ul>
+        <ul className="flex items-center gap-4">{children}</ul>
       </nav>
     </header>
   );
