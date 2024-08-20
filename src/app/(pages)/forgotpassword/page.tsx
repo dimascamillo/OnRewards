@@ -1,9 +1,10 @@
 "use client";
-import Transparent from "@/app/components/Buttons/Transparent";
-import YellowPrimary from "@/app/components/Buttons/YellowPrimary";
+
 import InputGeneric from "@/app/components/Form/Input";
 import YellowButton from "@/app/components/Form/YellowButton";
 import Header from "@/app/components/Header";
+import Transparent from "@/app/components/Links/Transparent";
+import YellowPrimary from "@/app/components/Links/YellowPrimary";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -34,7 +35,7 @@ export default function ForgotPassword() {
     <>
       <Header>
         <li>
-          <YellowPrimary content="Entrar" url="/pages/signin" />
+          <YellowPrimary content="Entrar" url="/signin" />
         </li>
 
         <li>

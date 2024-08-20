@@ -31,14 +31,14 @@ export default function SignIn() {
   const router = useRouter();
 
   function handleSignin() {
-    router.push("/pages/clients/user");
+    router.push("/dashboards/user");
   }
 
   return (
     <>
       <Header>
         <li>
-          <Transparent content="Cadastrar" url="/pages/signup" />
+          <Transparent content="Cadastrar" url="/signup" />
         </li>
       </Header>
       <main className="relative z-10 text-center">
@@ -75,7 +75,7 @@ export default function SignIn() {
             Esqueceu a senha{" "}
             <Link
               className="text-yellow-primary-400 font-bold transition-all hover:text-yellow-300"
-              href="/pages/forgotpassword"
+              href="/forgotpassword"
             >
               Clique aqui.
             </Link>
@@ -90,7 +90,7 @@ export default function SignIn() {
             Ainda não possui conta?{" "}
             <Link
               className="text-yellow-primary-400 font-bold transition-all hover:text-yellow-300"
-              href="/pages/signup"
+              href="/signup"
             >
               Cadastre-se
             </Link>
