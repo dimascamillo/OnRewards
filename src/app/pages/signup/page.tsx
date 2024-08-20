@@ -1,9 +1,9 @@
 "use client";
 
-import Transparent from "@/app/components/Buttons/Transparent";
 import InputGeneric from "@/app/components/Form/Input";
 import YellowButton from "@/app/components/Form/YellowButton";
 import Header from "@/app/components/Header";
+import Transparent from "@/app/components/Links/Transparent";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -104,7 +104,7 @@ export default function SignUp() {
           </div>
 
           <YellowButton
-            content="Entrar"
+            content="Cadastrar"
             type="submit"
             className="w-full mt-6 disabled:cursor-not-allowed"
             disabled={isSubmitting}
