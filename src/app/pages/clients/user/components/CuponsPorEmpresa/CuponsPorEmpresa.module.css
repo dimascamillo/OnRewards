@@ -1,0 +1,13 @@
+.flagProgress {
+  position: relative;
+}
+
+.flagProgress::after {
+  position: absolute;
+  content: "";
+  width: var(--largura-progresso, 0px);
+  height: 100%;
+  left: 0;
+  top: 0;
+  border-radius: 8px;
+}

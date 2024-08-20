@@ -3,7 +3,11 @@
 import ButtonYellowPrimary from "@/app/components/Buttons/YellowPrimary";
 import Image from "next/image";
 
-export default function MeusCupons() {
+interface MeusCuponsProps {
+  trigger: () => void;
+}
+
+export default function MeusCupons({ trigger }: MeusCuponsProps) {
   return (
     <div className="flex flex-wrap">
       <h1 className="text-yellow-primary-400 text-4xl w-full text-center mb-4">
@@ -43,7 +47,7 @@ export default function MeusCupons() {
               <ButtonYellowPrimary
                 className="m-auto"
                 content="Acessar"
-                onClick={() => "a"}
+                onClick={trigger}
               />
             </td>
           </tr>
@@ -68,7 +72,7 @@ export default function MeusCupons() {
               <ButtonYellowPrimary
                 className="m-auto"
                 content="Acessar"
-                onClick={() => "a"}
+                onClick={trigger}
               />
             </td>
           </tr>
@@ -93,7 +97,7 @@ export default function MeusCupons() {
               <ButtonYellowPrimary
                 className="m-auto"
                 content="Acessar"
-                onClick={() => "a"}
+                onClick={trigger}
               />
             </td>
           </tr>

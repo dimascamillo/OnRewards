@@ -1,7 +1,7 @@
 interface YellowButtonProps {
   content: string;
-  onClick: () => void;
-  className: string;
+  onClick?: () => void;
+  className?: string;
 }
 
 export default function ButtonYellowPrimary({
