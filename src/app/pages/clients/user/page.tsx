@@ -9,38 +9,25 @@ import MeusCupons from "./components/MeusCupons";
 import CuponsPorEmpresa from "./components/CuponsPorEmpresa";
 
 export default function User() {
-  const [QRCodeStatus, setQRCodeStatus] = useState(false);
-  const [MeusCuponsStatus, setMeusCuponsStatus] = useState(true);
-
-  const [CuponsPorEmpresaStatus, setCuponsPorEmpresaStatus] = useState(true);
-
+  const [activeComponent, setActiveComponent] = useState("qrcode");
   const idUser = 2;
 
-  function setQRCodeUser() {
-    setQRCodeStatus(false);
-    setMeusCuponsStatus(true);
-  }
-
-  function setMeusCuponsUser() {
-    setMeusCuponsStatus(false);
-    setQRCodeStatus(true);
-  }
-
-  function setCuponsPorEmpresaStatusUser() {
-    setCuponsPorEmpresaStatus(false);
-    setMeusCuponsStatus(true);
-    setQRCodeStatus(true);
-  }
+  const setActiveSection = (section: string) => {
+    setActiveComponent(section);
+  };
 
   return (
     <>
       <Header>
         <li>
-          <ButtonYellowPrimary onClick={setQRCodeUser} content="Gerar QRCode" />
+          <ButtonYellowPrimary
+            onClick={() => setActiveSection("qrcode")}
+            content="Gerar QRCode"
+          />
         </li>
         <li>
           <ButtonYellowPrimary
-            onClick={setMeusCuponsUser}
+            onClick={() => setActiveSection("meusCupons")}
             content="Meus cupons"
           />
         </li>
@@ -49,17 +36,23 @@ export default function User() {
         </li>
       </Header>
       <main className="relative z-10 h-screen">
-        <section className="h-full w-full" hidden={QRCodeStatus}>
-          <QRCodeUser value={idUser} />
-        </section>
+        {activeComponent === "qrcode" && (
+          <section className="h-full w-full">
+            <QRCodeUser value={idUser} />
+          </section>
+        )}
 
-        <section className="h-full w-full" hidden={MeusCuponsStatus}>
-          <MeusCupons trigger={setCuponsPorEmpresaStatusUser} />
-        </section>
+        {activeComponent === "meusCupons" && (
+          <section className="h-full w-full">
+            <MeusCupons trigger={() => setActiveSection("cuponsPorEmpresa")} />
+          </section>
+        )}
 
-        <section className="h-full w-full" hidden={CuponsPorEmpresaStatus}>
-          <CuponsPorEmpresa />
-        </section>
+        {activeComponent === "cuponsPorEmpresa" && (
+          <section className="h-full w-full">
+            <CuponsPorEmpresa />
+          </section>
+        )}
       </main>
     </>
   );
